@@ -1,0 +1,40 @@
+# Ignore settings files
+.DS_Store
+template.md
+
+# Ignore Specific directory
+materials/
+shell/
+
+# Ignore Specific file
+P002-*
+P007-*
+P014-*
+P015-*
+P018-*
+P021-*
+P025-*
+P028-*
+P032-*
+P033-*
+P035-*
+P036-*
+P059-*
+P060-*
+P061-*
+P063-*
+P064-*
+P065-*
+P070-*
+P071-*
+P073-*
+P075-*
+P081-*
+P082-*
+P083-*
+P094-*
+P095-*
+P096-*
+P097-*
+P098-*
+

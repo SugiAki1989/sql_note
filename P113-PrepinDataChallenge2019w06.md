@@ -55,8 +55,117 @@ select * from p2019w06t3;
 (10 rows)
 ```
 
-```sql
+解答はこちら。
 
+```sql
+with tmp as (
+select
+   t1.country,
+   t1.category,
+   to_date('19 ' || split_part(t1.table_names, '-', 2), 'DD Mon YYYY') as month_mod,
+   floor(t1.units_sold * (t2.selling_price_per_unit - t2.manufacturing_cost_per_unit)) as profit
+from
+   p2019w06t1 as t1
+left join
+   p2019w06t2 as t2
+on
+   t1.category = (t2.type_of_soap || ' Soap')
+), tmp2 as (
+(select
+   country,
+   sum(profit)::int as profit,
+   category,
+   month_mod as month
+from
+   tmp
+group by
+   country,
+   category,
+   month_mod)
+union all
+(select
+   country,
+   profit,
+   category,
+   month::date
+from
+   p2019w06t3)
+)
+select
+   country,
+   month,
+   category,
+   profit
+from
+   tmp2
+order by
+   country asc,
+   month asc,
+   category asc
+;
+
+ country  |   month    |  category   | profit
+----------+------------+-------------+--------
+ England  | 2019-01-19 | Bar Soap    |   1955
+ England  | 2019-01-19 | Liquid Soap |   1630
+ England  | 2019-02-19 | Bar Soap    |   2145
+ England  | 2019-02-19 | Liquid Soap |   1755
+ England  | 2019-03-19 | Bar Soap    |   2079
+ England  | 2019-03-19 | Liquid Soap |    914
+ Scotland | 2019-01-19 | Bar Soap    |   1475
+ Scotland | 2019-01-19 | Liquid Soap |    755
+ Scotland | 2019-02-19 | Bar Soap    |   1350
+ Scotland | 2019-02-19 | Liquid soap |    695
+ Scotland | 2019-03-19 | Bar Soap    |   1550
+ Scotland | 2019-03-19 | Liquid Soap |    645
+(12 rows)
+```
+
+まずは日付を処理しておく。設計上、19 日としていいみたい。
+
+```sql
+select
+   to_date('19 ' || split_part(table_names, '-', 2), 'DD Mon YYYY') as mod_date
+from
+   p2019w06t1
+;
+
+    sp
+------------
+ 2019-03-19
+ 2019-03-19
+ 2019-03-19
+ 2019-03-19
+ 2019-03-19
+ 2019-03-19
+(6 rows)
+```
+
+あとはテーブルを紐付けて、利益を計算する。その後にグループ化集計、ユニオンでおわり。
+
+```sql
+select
+   t1.country,
+   t1.category,
+   to_date('19 ' || split_part(t1.table_names, '-', 2), 'DD Mon YYYY') as month_mod,
+   floor(t1.units_sold * (t2.selling_price_per_unit - t2.manufacturing_cost_per_unit)) as profit
+from
+   p2019w06t1 as t1
+left join
+   p2019w06t2 as t2
+on
+   t1.category = (t2.type_of_soap || ' Soap')
+;
+
+ country |  category   | month_mod  | profit
+---------+-------------+------------+--------
+ England | Bar Soap    | 2019-03-19 |   1045
+ England | Bar Soap    | 2019-03-19 |    429
+ England | Bar Soap    | 2019-03-19 |    605
+ England | Liquid Soap | 2019-03-19 |    364
+ England | Liquid Soap | 2019-03-19 |    223
+ England | Liquid Soap | 2019-03-19 |    327
+(6 rows)
 ```
 
 ## :closed_book: Reference

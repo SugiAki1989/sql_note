@@ -7,6 +7,7 @@ materials/
 shell/
 
 # Ignore Specific file
+# READMEは「Page001-」という表記だが、ファイル名は「P001-」なので注意が必要
 P002-*
 P007-*
 P014-*

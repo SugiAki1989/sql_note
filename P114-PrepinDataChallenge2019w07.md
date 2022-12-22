@@ -15,7 +15,7 @@ PostgreSQL
 
 ## :pencil2: Example
 
-提供されたデータこちら。
+提供されたデータこちら。出荷する荷物の情報があって、これらが出荷条件を満たしているかを判定する、というお題。
 
 ```sql
 select * from p2019w07t1 limit 10;

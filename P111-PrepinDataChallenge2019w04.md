@@ -15,7 +15,7 @@ PostgreSQL
 
 ## :pencil2: Example
 
-提供されたデータこちら。
+提供されたデータこちら。NBA の試合サマリーデータがあって、ここから様々なお題に答える、というお題。
 
 ```sql
 select * from p2019w04t1 limit 10;

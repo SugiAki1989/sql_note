@@ -15,7 +15,7 @@ PostgreSQL
 
 ## :pencil2: Example
 
-提供されたデータこちら。
+提供されたデータこちら。天気予報データを指標ごとに人間が可読しやすいように整形するというお題。
 
 ```sql
 select * from p2019w02t1 limit 10;

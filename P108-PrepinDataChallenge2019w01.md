@@ -15,7 +15,7 @@ PostgreSQL
 
 ## :pencil2: Example
 
-提供されたデータこちら。
+提供されたデータこちら。車の販売データがあって、車種べつにどれだけ販売されたかを計算するのがお題。
 
 ```sql
 select * from p2019w01t1 limit 10;

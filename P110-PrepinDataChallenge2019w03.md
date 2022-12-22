@@ -15,7 +15,7 @@ PostgreSQL
 
 ## :pencil2: Example
 
-提供されたデータこちら。
+提供されたデータこちら。契約データがあって、ここから契約期間を可視化する、というお題。
 
 ```sql
 select * from p2019w03t1;

@@ -261,15 +261,15 @@ select now() as now
 , now() - interval 1 second as minus1second
 )
 select
-  datediff(plus1year, now) as datediff_year,
+	datediff(plus1year, now) as datediff_year,
 	datediff(plus1month, now) as datediff_month,
 	datediff(plus1day, now) as datediff_day,
 	timediff(plus1hour, now) as timediff_hour,
 	timediff(plus1minute, now) as timediff_minute,
-  timediff(plus1second, now) as timediff_second,
+	timediff(plus1second, now) as timediff_second,
 	timestampdiff(second, now, plus1hour) as timestampdiff_hour,
 	timestampdiff(second, now, plus1minute) as timestampdiff_minute,
-  timestampdiff(second, now, plus1second) as timestampdiff_second
+	timestampdiff(second, now, plus1second) as timestampdiff_second
 from
 	tmp
 \G

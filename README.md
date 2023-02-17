@@ -148,32 +148,9 @@
 - [Page105-交互に行の値を入れ替える.md](https://github.com/SugiAki1989/sql_note/blob/main/P105-%E4%BA%A4%E4%BA%92%E3%81%AB%E8%A1%8C%E3%81%AE%E5%80%A4%E3%82%92%E5%85%A5%E3%82%8C%E6%9B%BF%E3%81%88%E3%82%8B.md)
 - [Page106-サッカーの勝敗表から勝ち点を計算する](https://github.com/SugiAki1989/sql_note/blob/main/P106-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8B%9D%E6%95%97%E8%A1%A8%E3%81%8B%E3%82%89%E5%8B%9D%E3%81%A1%E7%82%B9%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B.md)
 - [Page107-特定時点での売上合計を計算する](https://github.com/SugiAki1989/sql_note/blob/main/P107-%E7%89%B9%E5%AE%9A%E6%99%82%E7%82%B9%E3%81%A7%E3%81%AE%E5%A3%B2%E4%B8%8A%E5%90%88%E8%A8%88%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B.md)
+- [Page108-BigQueryでfirebase-public-projectデータを使う方法]()
 
-<------------ Prepin Data Challenge ------------>
 
-- [Page108-PrepinDataChallenge2019w01.md](https://github.com/SugiAki1989/sql_note/blob/main/P108-PrepinDataChallenge2019w01.md)
-- [Page109-PrepinDataChallenge2019w02.md](https://github.com/SugiAki1989/sql_note/blob/main/P109-PrepinDataChallenge2019w02.md)
-- [Page110-PrepinDataChallenge2019w03.md](https://github.com/SugiAki1989/sql_note/blob/main/P110-PrepinDataChallenge2019w03.md)
-- [Page111-PrepinDataChallenge2019w04.md](https://github.com/SugiAki1989/sql_note/blob/main/P111-PrepinDataChallenge2019w04.md)
-- [Page112-PrepinDataChallenge2019w05.md](https://github.com/SugiAki1989/sql_note/blob/main/P112-PrepinDataChallenge2019w05.md)
-- [Page113-PrepinDataChallenge2019w06.md](https://github.com/SugiAki1989/sql_note/blob/main/P113-PrepinDataChallenge2019w06.md)
-- [Page114-PrepinDataChallenge2019w07.md](https://github.com/SugiAki1989/sql_note/blob/main/P114-PrepinDataChallenge2019w07.md)
-- [Page115-PrepinDataChallenge2019w08.md](https://github.com/SugiAki1989/sql_note/blob/main/P115-PrepinDataChallenge2019w08.md)
-- [Page116-PrepinDataChallenge2019w09.md](https://github.com/SugiAki1989/sql_note/blob/main/P116-PrepinDataChallenge2019w09.md)
-- [Page117-PrepinDataChallenge2019w10.md](https://github.com/SugiAki1989/sql_note/blob/main/P117-PrepinDataChallenge2019w10.md)
-- [Page118-PrepinDataChallenge2019w11.md](https://github.com/SugiAki1989/sql_note/blob/main/P118-PrepinDataChallenge2019w11.md)
-- [Page119-PrepinDataChallenge2019w12.md](https://github.com/SugiAki1989/sql_note/blob/main/P119-PrepinDataChallenge2019w12.md)
-- [Page120-PrepinDataChallenge2019w13.md](https://github.com/SugiAki1989/sql_note/blob/main/P120-PrepinDataChallenge2019w13.md)
-- [Page121-PrepinDataChallenge2019w14.md](https://github.com/SugiAki1989/sql_note/blob/main/P121-PrepinDataChallenge2019w14.md)
-- [Page122-PrepinDataChallenge2019w15.md](https://github.com/SugiAki1989/sql_note/blob/main/P122-PrepinDataChallenge2019w15.md)
-- [Page123-PrepinDataChallenge2019w16.md](https://github.com/SugiAki1989/sql_note/blob/main/P123-PrepinDataChallenge2019w16.md)
-- [Page124-PrepinDataChallenge2019w17.md](https://github.com/SugiAki1989/sql_note/blob/main/P124-PrepinDataChallenge2019w17.md)
-- [Page125-PrepinDataChallenge2019w18.md](https://github.com/SugiAki1989/sql_note/blob/main/P125-PrepinDataChallenge2019w18.md)
-- [Page126-PrepinDataChallenge2019w19.md](https://github.com/SugiAki1989/sql_note/blob/main/P126-PrepinDataChallenge2019w19.md)
-- [Page127-PrepinDataChallenge2019w20.md](https://github.com/SugiAki1989/sql_note/blob/main/P127-PrepinDataChallenge2019w20.md)
-- [Page128-PrepinDataChallenge2019w21.md](https://github.com/SugiAki1989/sql_note/blob/main/P128-PrepinDataChallenge2019w21.md)
-- [Page129-PrepinDataChallenge2019w22.md](https://github.com/SugiAki1989/sql_note/blob/main/P129-PrepinDataChallenge2019w22.md)
-- [Page130-PrepinDataChallenge2019w23.md](https://github.com/SugiAki1989/sql_note/blob/main/P130-PrepinDataChallenge2019w23.md)
 
 ## テストデータ作成のための Tips.md
 

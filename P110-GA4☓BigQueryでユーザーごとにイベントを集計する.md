@@ -16,8 +16,12 @@ BigQuery
 
 ## :pencil2: Example
 
+今回はユーザーごとにイベントを計測する。
+
+ユーザーには三種類あって
+
 ```
-select
+
 ```
 
 ## :closed_book: Reference

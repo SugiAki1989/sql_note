@@ -149,9 +149,8 @@
 - [Page106-サッカーの勝敗表から勝ち点を計算する](https://github.com/SugiAki1989/sql_note/blob/main/P106-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8B%9D%E6%95%97%E8%A1%A8%E3%81%8B%E3%82%89%E5%8B%9D%E3%81%A1%E7%82%B9%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B.md)
 - [Page107-特定時点での売上合計を計算する](https://github.com/SugiAki1989/sql_note/blob/main/P107-%E7%89%B9%E5%AE%9A%E6%99%82%E7%82%B9%E3%81%A7%E3%81%AE%E5%A3%B2%E4%B8%8A%E5%90%88%E8%A8%88%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B.md)
 - [Page108-BigQuery で firebase-public-project データを使う方法](https://github.com/SugiAki1989/sql_note/blob/main/P108-BigQuery%E3%81%A7firebase-public-project%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E4%BD%BF%E3%81%86%E6%96%B9%E6%B3%95.md)
-
-- [Page109-P109-GA4☓BigQuery でイベントを集計する]()
-- [Page110-P110-GA4☓BigQuery でユーザーごとにイベントを集計する]()
+- [Page109-P109-GA4☓BigQuery でイベントを集計する](https://github.com/SugiAki1989/sql_note/blob/main/P109-GA4%E2%98%93BigQuery%E3%81%A7%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%82%92%E9%9B%86%E8%A8%88%E3%81%99%E3%82%8B.md)
+- [Page110-P110-GA4☓BigQuery でユーザーごとにイベントを集計する](https://github.com/SugiAki1989/sql_note/blob/main/P110-GA4%E2%98%93BigQuery%E3%81%A7%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%94%E3%81%A8%E3%81%AB%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%82%92%E9%9B%86%E8%A8%88%E3%81%99%E3%82%8B.md)
 
 ## テストデータ作成のための Tips.md
 

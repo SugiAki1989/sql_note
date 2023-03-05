@@ -152,7 +152,7 @@
 - [Page109-GA4☓BigQuery でイベントを集計する](https://github.com/SugiAki1989/sql_note/blob/main/P109-GA4%E2%98%93BigQuery%E3%81%A7%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%82%92%E9%9B%86%E8%A8%88%E3%81%99%E3%82%8B.md)
 - [Page110-GA4☓BigQuery でユーザーごとにイベントを集計する](https://github.com/SugiAki1989/sql_note/blob/main/P110-GA4%E2%98%93BigQuery%E3%81%A7%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%94%E3%81%A8%E3%81%AB%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%82%92%E9%9B%86%E8%A8%88%E3%81%99%E3%82%8B.md)
 - [Page111-GA4☓BigQuery でページのビュー数を集計する](https://github.com/SugiAki1989/sql_note/blob/main/P111-GA4%E2%98%93BigQuery%E3%81%A7%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E3%83%93%E3%83%A5%E3%83%BC%E6%95%B0%E3%82%92%E9%9B%86%E8%A8%88%E3%81%99%E3%82%8B.md)
-- [Page112-GA4☓BigQuery で日付期間を設定して集計する](https://github.com/SugiAki1989/sql_note/blob/main/P112-GA4%E2%98%93BigQuery%E3%81%A7%E6%97%A5%E4%BB%98%E6%9C%9F%E9%96%93%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B.md)
+- [Page112-GA4☓BigQuery で日付を活用して集計する](https://github.com/SugiAki1989/sql_note/blob/main/P112-GA4%E2%98%93BigQuery%E3%81%A7%E6%97%A5%E4%BB%98%E6%9C%9F%E9%96%93%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B.md)
 
 ## テストデータ作成のための Tips.md
 

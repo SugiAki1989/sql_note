@@ -12,7 +12,7 @@ BigQuery
 
 ## :bookmark: Tag
 
-`event`
+`unnest`
 
 ## :pencil2: Example
 

@@ -158,7 +158,7 @@ order by
 | 2020-12-31      | 2340         | 2340         |
 | 2021-01-01      | 678          | 678          |
 
-調べてみると、同じユーザーと識別されているにも関わらず、`first_visit`イベントを異なるタイミングで複数回、発火させているユーザーがちらほらいるため、`date_first_touch`が同じであっても、集計期間内であっても、さきほどの SQL では違いがでてしまう。前者の SQL の方がおそらく実態に即していると思われる。
+調べてみると、同じユーザーと識別されているにも関わらず、`first_visit`イベントを異なるタイミングで複数回、発火させているユーザーがちらほらいるため、`date_first_touch`が同じであっても、集計期間内であっても、さきほどの SQL では違いがでてしまう。前者の SQL の方がおそらく実態に即していると思われる。また、初めてサイトにアクセスしたときの`event_timestamp = date_first_touch`だと思っていたが、そうでもないケースがある模様。
 
 ```
 select
@@ -172,7 +172,7 @@ from
 where
   user_pseudo_id in ('5661311.7262579481', '70077886.1506277727') and
   event_name ='first_visit' and
-  _table_suffix between '20201210' and '20201212'
+  _table_suffix between '20201205' and '20201212'
 order by
   user_pseudo_id desc,
   event_timestamp asc

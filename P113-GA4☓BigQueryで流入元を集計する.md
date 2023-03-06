@@ -246,6 +246,8 @@ select * from tmp;
 
 流入元ごとのセッション数を取得する SQL を[参考にしているサイト](https://www.ga4.guide/related-service/big-query/query-writing/)の SQL を下記にメモしておく。`first_value()`関数をテキストの SQL では利用しているが、画像では`max()`関数になっている。`first_value()`を下記のようにそのまま使用するとエラーがでる。
 
+![sql](https://github.com/SugiAki1989/sql_note/blob/main/image/p113-sql.png)
+
 ```
 with predata as ( --select文に名称をつける。ここではpredata。「(」を忘れないように
 select

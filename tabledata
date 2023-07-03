@@ -1,0 +1,283 @@
+サンプルデータの ER 図
+
+```mermaid
+%%{init:{'theme':'neutral'}}%%
+
+erDiagram
+    EMP {
+        integer EMPNO
+        varchar ENAME
+        varchar JOB
+        integer MGR
+        date HIREDATE
+        integer SAL
+        integer COMM
+        integer DEPTNO
+    }
+
+    DEPT {
+        integer DEPTNO
+        varchar DNAME
+        varchar LOC
+    }
+```
+
+```sql
+CREATE DATABASE sqlcookbook;
+\c sqlcookbook;
+
+CREATE TABLE EMP (EMPNO integer NOT NULL, ENAME VARCHAR(10), JOB VARCHAR(9), MGR integer, HIREDATE DATE, SAL integer, COMM integer, DEPTNO integer);
+INSERT INTO EMP VALUES(7369, 'SMITH', 'CLERK', 7902, '1980-12-17', 800, NULL, 20);
+INSERT INTO EMP VALUES(7499, 'ALLEN', 'SALESMAN', 7698,'1981-2-20', 1600, 300, 30);
+INSERT INTO EMP VALUES(7521, 'WARD', 'SALESMAN', 7698,'1981-2-22', 1250, 500, 30);
+INSERT INTO EMP VALUES(7566, 'JONES', 'MANAGER', 7839,'1981-4-2', 2975, NULL, 20);
+INSERT INTO EMP VALUES(7654, 'MARTIN', 'SALESMAN', 7698,'1981-9-28', 1250, 1400, 30);
+INSERT INTO EMP VALUES(7698, 'BLAKE', 'MANAGER', 7839,'1981-5-1', 2850, NULL, 30);
+INSERT INTO EMP VALUES(7782, 'CLARK', 'MANAGER', 7839,'1981-6-9', 2450, NULL, 10);
+INSERT INTO EMP VALUES(7788, 'SCOTT', 'ANALYST', 7566,'1982-12-9', 3000, NULL, 20);
+INSERT INTO EMP VALUES(7839, 'KING', 'PRESIDENT', NULL,'1981-11-17', 5000, NULL, 10);
+INSERT INTO EMP VALUES(7844, 'TURNER', 'SALESMAN', 7698,'1981-9-8', 1500, 0, 30);
+INSERT INTO EMP VALUES(7876, 'ADAMS', 'CLERK', 7788,'1983-1-12', 1100, NULL, 20);
+INSERT INTO EMP VALUES(7900, 'JAMES', 'CLERK', 7698,'1981-12-3', 950, NULL, 30);
+INSERT INTO EMP VALUES(7902, 'FORD', 'ANALYST', 7566,'1981-12-3', 3000, NULL, 20);
+INSERT INTO EMP VALUES(7934, 'MILLER', 'CLERK', 7782,'1982-1-23', 1300, NULL, 10);
+
+CREATE TABLE DEPT (DEPTNO integer, DNAME VARCHAR(14), LOC VARCHAR(13));
+INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
+INSERT INTO DEPT VALUES (20, 'RESEARCH', 'DALLAS');
+INSERT INTO DEPT VALUES (30, 'SALES', 'CHICAGO');
+INSERT INTO DEPT VALUES (40, 'OPERATIONS', 'BOSTON');
+
+CREATE TABLE emp_bonus (EMPNO integer NOT NULL, RECEIVED DATE, TYPE integer);
+INSERT INTO emp_bonus VALUES(7934, '1981-3-17', 1);
+INSERT INTO emp_bonus VALUES(7934, '1981-2-15', 2);
+INSERT INTO emp_bonus VALUES(7839, '1981-2-15', 3);
+INSERT INTO emp_bonus VALUES(7782, '1981-2-15', 1);
+
+CREATE TABLE fruits (name VARCHAR(10));
+INSERT INTO fruits VALUES('Oranges');
+INSERT INTO fruits VALUES('Oranges');
+INSERT INTO fruits VALUES('Oranges');
+INSERT INTO fruits VALUES('Apple');
+INSERT INTO fruits VALUES('Peach');
+INSERT INTO fruits VALUES(null);
+INSERT INTO fruits VALUES(null);
+INSERT INTO fruits VALUES(null);
+INSERT INTO fruits VALUES(null);
+INSERT INTO fruits VALUES(null);
+
+
+CREATE TABLE T1 (ID INTEGER);
+INSERT INTO T1 VALUES (1);
+
+CREATE TABLE T10 (ID INTEGER);
+INSERT INTO T10 VALUES (1);
+INSERT INTO T10 VALUES (2);
+INSERT INTO T10 VALUES (3);
+INSERT INTO T10 VALUES (4);
+INSERT INTO T10 VALUES (5);
+INSERT INTO T10 VALUES (6);
+INSERT INTO T10 VALUES (7);
+INSERT INTO T10 VALUES (8);
+INSERT INTO T10 VALUES (9);
+INSERT INTO T10 VALUES (10);
+
+CREATE TABLE T100 (ID INTEGER);
+INSERT INTO T100 VALUES (1);
+INSERT INTO T100 VALUES (2);
+略
+INSERT INTO T100 VALUES (99);
+INSERT INTO T100 VALUES (100);
+
+create table penguins(
+    rowid integer,
+    species varchar(10),
+    island varchar(10),
+    bill_length_mm real,
+    bill_depth_mm real,
+    flipper_length_mm real,
+    body_mass_g real,
+    sex varchar(10),
+    year integer
+    );
+```
+
+```sql
+-- seaborn-data
+wget https://gist.githubusercontent.com/slopp/ce3b90b9168f2f921784de84fa445651/raw/4ecf3041f0ed4913e7c230758733948bc561f434/penguins.csv
+sed -e 's/NA//g' penguins.csv > penguins_mod.csv
+
+head -n10 penguins_mod.csv
+"rowid","species","island","bill_length_mm","bill_depth_mm","flipper_length_mm","body_mass_g","sex","year"
+"1","Adelie","Torgersen",39.1,18.7,181,3750,"male",2007
+"2","Adelie","Torgersen",39.5,17.4,186,3800,"female",2007
+"3","Adelie","Torgersen",40.3,18,195,3250,"female",2007
+"4","Adelie","Torgersen",NA,NA,NA,NA,NA,2007
+"5","Adelie","Torgersen",36.7,19.3,193,3450,"female",2007
+"6","Adelie","Torgersen",39.3,20.6,190,3650,"male",2007
+"7","Adelie","Torgersen",38.9,17.8,181,3625,"female",2007
+"8","Adelie","Torgersen",39.2,19.6,195,4675,"male",2007
+"9","Adelie","Torgersen",34.1,18.1,193,3475,NA,2007
+
+realpath penguins_mod.csv
+\copy penguins from '/Users/aki/Desktop/penguins_mod.csv' (encoding 'utf8', format csv, header true);
+```
+
+```sql
+# https://archive.ics.uci.edu/ml/machine-learning-databases/
+create table onlinestore(
+    InvoiceNo varchar(255),
+    StockCode varchar(255),
+    Description varchar(255),
+    Quantity real,
+    InvoiceDate timestamp,
+    UnitPrice real,
+    CustomerID varchar(255),
+    Country varchar(255)
+);
+\copy onlinestore from '/Users/aki/Desktop/ec.csv' (encoding 'utf8', format csv, header true);
+
+
+select * from onlinestore limit 10;
+ invoiceno | stockcode |             description             | quantity |     invoicedate     | unitprice | customerid |    country
+-----------+-----------+-------------------------------------+----------+---------------------+-----------+------------+----------------
+ 536365    | 85123A    | WHITE HANGING HEART T-LIGHT HOLDER  |        6 | 2010-12-01 08:26:00 |      2.55 | 17850      | United Kingdom
+ 536365    | 71053     | WHITE METAL LANTERN                 |        6 | 2010-12-01 08:26:00 |      3.39 | 17850      | United Kingdom
+ 536365    | 84406B    | CREAM CUPID HEARTS COAT HANGER      |        8 | 2010-12-01 08:26:00 |      2.75 | 17850      | United Kingdom
+ 536365    | 84029G    | KNITTED UNION FLAG HOT WATER BOTTLE |        6 | 2010-12-01 08:26:00 |      3.39 | 17850      | United Kingdom
+ 536365    | 84029E    | RED WOOLLY HOTTIE WHITE HEART.      |        6 | 2010-12-01 08:26:00 |      3.39 | 17850      | United Kingdom
+ 536365    | 22752     | SET 7 BABUSHKA NESTING BOXES        |        2 | 2010-12-01 08:26:00 |      7.65 | 17850      | United Kingdom
+ 536365    | 21730     | GLASS STAR FROSTED T-LIGHT HOLDER   |        6 | 2010-12-01 08:26:00 |      4.25 | 17850      | United Kingdom
+ 536366    | 22633     | HAND WARMER UNION JACK              |        6 | 2010-12-01 08:28:00 |      1.85 | 17850      | United Kingdom
+ 536366    | 22632     | HAND WARMER RED POLKA DOT           |        6 | 2010-12-01 08:28:00 |      1.85 | 17850      | United Kingdom
+ 536367    | 84879     | ASSORTED COLOUR BIRD ORNAMENT       |       32 | 2010-12-01 08:34:00 |      1.69 | 13047      | United Kingdom
+```
+
+```sql
+-- https://www.kaggle.com/datasets/stackoverflow/rquestions に似たようなデータがある。下記はBQのPublicデータの場合。
+create database sof;
+\c sof;
+
+create table users(
+    id varchar(255),
+    creation_date timestamp,
+    last_access_date timestamp
+);
+\copy users from '/Users/aki/Desktop/stackoverflow_users_from20220101.csv' (encoding 'utf8', format csv, header true);
+
+
+create table questions(
+    id varchar(255),
+    title text,
+    creation_date timestamp,
+    owner_user_id varchar(255)
+    );
+\copy questions from '/Users/aki/Desktop/stackoverflow_questions_from20220101.csv' (encoding 'utf8', format csv, header true);
+
+create table answers(
+    id varchar(255),
+    creation_date timestamp,
+    owner_user_id varchar(255),
+    parent_id varchar(255)
+);
+\copy answers from '/Users/aki/Desktop/stackoverflow_answers_from20220101.csv' (encoding 'utf8', format csv, header true);
+
+\d
+          List of relations
+ Schema |   Name    | Type  | Owner
+--------+-----------+-------+--------
+ public | answers   | table | worker
+ public | questions | table | worker
+ public | users     | table | worker
+(3 rows)
+
+sof=> select * from users limit 10;
+    id    |      creation_date      |    last_access_date
+----------+-------------------------+-------------------------
+ 17808265 | 2022-01-01 08:12:52.627 | 2022-02-27 01:25:02.92
+ 17808395 | 2022-01-01 08:43:28.587 | 2022-01-01 08:43:28.587
+ 17808588 | 2022-01-01 09:39:43.913 | 2022-01-01 09:39:43.913
+ 17809663 | 2022-01-01 13:52:02.333 | 2022-02-27 13:16:01.83
+ 17809684 | 2022-01-01 13:57:39.287 | 2022-01-01 15:16:24.927
+ 17809863 | 2022-01-01 14:37:39.807 | 2022-01-17 01:50:04.933
+ 17810204 | 2022-01-01 15:51:05.05  | 2022-01-04 20:38:02.75
+ 17810879 | 2022-01-01 18:19:43.003 | 2022-01-01 18:19:43.003
+ 17810888 | 2022-01-01 18:21:24.25  | 2022-01-01 18:21:24.25
+ 17810910 | 2022-01-01 18:24:30.42  | 2022-01-01 18:24:30.42
+(10 rows)
+
+sof=> select * from questions limit 10;
+    id    |                                                                      title                                                                       |      creation_date      | owner_user_id
+----------+--------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+---------------
+ 71004348 | print outnum to the standard output stream sample input 5,10,6,8 sample output 4                                                                 | 2022-02-06 05:07:48.897 | 18131743
+ 71049453 | Cloud tab under Agents missing - Team City                                                                                                       | 2022-02-09 12:16:24.087 | 18161161
+ 70874184 | How do I capture my HTTPS post request on a pop-out window that immediately and automatically closes after submission?                           | 2022-01-27 06:20:31.917 | 18044492
+ 70895454 | Google Workflow to create user from a Form to google admin ??? API?                                                                              | 2022-01-28 14:36:37.623 | 18058739
+ 70937635 | ESMA PSS or PKCS1 of length 32 bytes                                                                                                             | 2022-02-01 08:44:47.95  | 18088666
+ 70971496 | Is there a way to catenate specific pages from multiple pdfs using pdftk?                                                                        | 2022-02-03 12:40:57.837 | 18109806
+ 70978650 | Avid Media Composer: Master clips displaying wrong media, reveal file correct                                                                    | 2022-02-03 21:38:37.74  | 18113954
+ 71011452 | Unable receive table data in Java Eclipse for MySQL workbench                                                                                    | 2022-02-06 20:39:32.977 | 18136694
+ 71022871 | VS Code live server after clicking to another page the page not found                                                                            | 2022-02-07 17:33:28.523 | 18144098
+ 71046690 | Is there any way to know if a task is successfully completed by an application that is opned with implicit intent from intent caller application | 2022-02-09 09:08:02.597 | 18159518
+(10 rows)
+
+sof=> select * from answers limit 10;
+    id    |      creation_date      | owner_user_id | parent_id
+----------+-------------------------+---------------+-----------
+ 70773938 | 2022-01-19 16:07:07.45  | 17976046      | 32573924
+ 70773961 | 2022-01-19 16:08:32.733 | 17976043      | 60903847
+ 70773996 | 2022-01-19 16:10:49.117 | 17976055      | 33543997
+ 70774096 | 2022-01-19 16:17:01.553 | 17975473      | 70558010
+ 70774106 | 2022-01-19 16:17:41.087 | 17926591      | 70765291
+ 70774155 | 2022-01-19 16:20:44.173 | 17880980      | 70656046
+ 70774199 | 2022-01-19 16:23:53.903 | 17976180      | 70663774
+ 70774249 | 2022-01-19 16:27:44.327 | 17902018      | 70773988
+ 70774276 | 2022-01-19 16:29:07.953 | 17964994      | 70772673
+ 70774315 | 2022-01-19 16:32:16.83  | 17966993      | 8499764
+(10 rows)
+```
+
+PrepinDataChallenge については`create table`と`copy`が少し手間なので、R からインサートする。
+
+```sql
+
+// settings.json
+// {
+//     "postgreSQL": {
+//         "user": "user_name",
+//         "pw": "password"
+//     }
+// }
+
+library(RPostgreSQL)
+library(jsonlite)
+
+setting <- fromJSON("settings.json")
+pg <- dbDriver("PostgreSQL")
+con <- dbConnect(
+  pg,
+  user = setting$postgreSQL$user,
+  password = setting$postgreSQL$pw,
+  host = "host_name",
+  port = 123456789,
+  dbname = "table_name"
+)
+
+dbSafeNames <- function(names) {
+  names <- gsub('[^a-z0-9]+','_',tolower(names))
+  names <- make.names(names, unique=TRUE, allow_=TRUE)
+  names <- gsub('.','_',names, fixed=TRUE)
+  names
+}
+csv_name <- "2019 Week 1.csv"
+table_name <- "p2019w01t1"
+df <- read.csv(csv_name)
+colnames(df) <- dbSafeNames(colnames(df))
+
+dbWriteTable(
+  conn = con,
+  name = c("public", table_name),
+  value = df,
+  row.names = FALSE
+  )
+```

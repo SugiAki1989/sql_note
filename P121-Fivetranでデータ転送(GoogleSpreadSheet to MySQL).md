@@ -44,7 +44,7 @@ We support MySQL as a test environment. If you run into these limitations, you w
 > - Provide at least 1024MB for innodb_buffer_pool_size. For more information about innodb_buffer_pool_size, see MySQL's Buffer Pool documentation.
 > - Set the local_infile system variable to ON. For more infomation about local_infile, see Server System Variables > documentation. Check the variable status with SHOW GLOBAL VARIABLES LIKE 'local_infile' and switch the status to ON with SET GLOBAL local_infile = true.
 
-今回は`db.t3.micro`を使用しており、パラメタグループから`innodb_buffer_pool_size`を変更しても Fivetran のエラーが解消できなかった。おそらく、`db.t3.micro`では`innodb_buffer_pool_size`の上限があるようで、設定を変えても反映されない模様。そのため、一時的にインスタンスタイプを`db.t3.medium`にアップしている。下記のエラーが表示されていた。
+今回は`db.t3.micro`を使用しており、パラメタグループから`innodb_buffer_pool_size`を変更しても Fivetran のエラーが解消できなかった。おそらく、`db.t3.micro`では`innodb_buffer_pool_size`の上限があるようで、設定を変えても反映されない模様。そのため、一時的にインスタンスタイプを`db.t3.small`以上にアップしている。下記のエラーが表示されていた。
 
 > Connection tests failed.
 > Warehouse User: The innodb_buffer_pool_size for your database is: 384 MB, which is very low. Please make sure its at least 1024 MB.
@@ -244,6 +244,24 @@ MySQL のインスタンスタイプをもとに戻すと、しっかりとエ�
   "connector_name" : "google_sheets.monitoring_myroom_co_2",
   "sync_id" : "b4hyg080-a5c0-4qa3-a4f3-12eef82wqw9"
 }
+```
+
+次の日にデータを確認すると、`id`が 3721 から 3906 まで進んでおり、問題なく Sync されていることが確認できる。
+
+```
+MySQL [google_sheets]> select * from monitoring_myroom_co_2 order by time desc limit 5;
+
++------+----------+---------------------+----------------------------+
+| _row | co_2_ppm | time                | _fivetran_synced           |
++------+----------+---------------------+----------------------------+
+| 3906 |      694 | 2023-07-08 10:26:20 | 2023-07-08 10:30:19.223000 |
+| 3905 |      745 | 2023-07-08 10:21:16 | 2023-07-08 10:30:19.223000 |
+| 3904 |      731 | 2023-07-08 10:16:12 | 2023-07-08 10:30:19.223000 |
+| 3903 |      734 | 2023-07-08 10:11:08 | 2023-07-08 10:30:19.223000 |
+| 3902 |      759 | 2023-07-08 10:06:03 | 2023-07-08 10:30:19.223000 |
++------+----------+---------------------+----------------------------+
+5 rows in set (0.02 sec)
+
 ```
 
 ## :closed_book: Reference

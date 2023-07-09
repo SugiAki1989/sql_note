@@ -70,7 +70,7 @@ models:
 }}
 ```
 
-## :pencil2: seeds 　& snapshots
+## :pencil2: seeds & snapshots
 
 seeds には追加のデータを保存することで、データウェアハウスにインサートして使用できる。`seeds/seed_hoge.csv`があるときに,`dbt seed`コマンドを実行すると、データウェアハウスに`seed_hoge`というテーブルが作成される。
 

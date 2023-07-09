@@ -160,8 +160,8 @@
 - [Page119-Embulk でデータ転送(SFTP to MySQL).md](<https://github.com/SugiAki1989/sql_note/blob/main/P119-Embulk%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81(SFTP%20to%20MySQL).md>)
 - [Page120-Embulkでデータ転送(GoogleSpreadSheet to MySQL).md](https://github.com/SugiAki1989/sql_note/blob/main/P120-Embulk%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81(GoogleSpreadSheet%20to%20MySQL).md)
 - [Page121-Fivetranでデータ転送(GoogleSpreadSheet to MySQL)](https://github.com/SugiAki1989/sql_note/blob/main/P121-Fivetran%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81(GoogleSpreadSheet%20to%20MySQL).md)
-- [Page122-DimensionalModelingについて](https://github.com/SugiAki1989/sql_note/blob/main/P122-DimensionalModeling%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
-
+- [Page122-DimensionalModelingについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P122-DimensionalModeling%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
+- [【WIP】Page123-dbtについて.md]()
 
 
 

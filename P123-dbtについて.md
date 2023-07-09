@@ -124,15 +124,38 @@ models:
               values: ['x', 'y', 'z']
 ```
 
-## :pencil2: CustomTests
+## :pencil2: Macros
 
-todo
+Macros には Python でコードが記述できる。例えば、`my_macro`としてマクロを定義すれば、
+
+```
+{% macro my_macro(model) %}
+    SELECT * FROM {{ model }} WHERE
+    {% for col in adapter.get_columns_in_relation(model) -%}
+        {{ col.column }} IS NULL OR
+    {% endfor %}
+    FALSE
+{% endmacro %}
+```
+
+`tests`フォルダの`.sql`でテストを記述する際にマクロを呼び出すことができる。
+
+```
+{{ my_macro(ref('dim_foge')) }}
+```
+
+また、`macros/check.sql`として保存しているマクロは`models/schema.yml`の中でも呼び出すことができる。
+
+```
+models:
+  - name: dim_hoge
+      (snip)
+      - name: macro_name
+        tests:
+          - check
+```
 
 ## :pencil2: Packages
-
-todo
-
-## :pencil2: Macros
 
 todo
 

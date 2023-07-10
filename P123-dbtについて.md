@@ -4,7 +4,9 @@
 
 - [dbt](https://www.getdbt.com/)
 
-`dbt init`すると生成されるフォルダごとにわけて記載している。
+基本的には`dbt init`すると生成されるフォルダごとにわけて記載しているが、出来ることがあまりにも多いので、詳細な情報までは記載しておらず、各機能の役割を簡単にまとめているだけ。
+
+dbt は ETL のデータ変換の部分のみを担当するものだと勘違いしていたが、dbt はデータ変換にとどまらず、ドキュメントの生成もでき、データ変換にまつわる諸問題も対処してくれる。さらに、マクロやパッケージを利用することでデータ変換のパイプラインを堅牢にできる。データ変換にまつわる様々な便利な機能を提供してくれるが dbt ということがわかった。
 
 ## :floppy_disk: Database
 
@@ -157,12 +159,134 @@ models:
 
 ## :pencil2: Packages
 
-todo
+サードパーティのパッケージを取り込むことができる。下記のサイトから様々なパッケージを検索して利用できる。
+
+- [Jumpstart your warehouse](https://hub.getdbt.com/)
+
+利用方法はプロジェクトのディレクトリに`packages.yml`を作成し、その中に下記のように記述することで利用できる。
+
+```
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 1.1.1
+```
+
+`dbt deps`コマンドでインストールできる。
+
+```
+$ dbt deps
+```
+
+例えば、`dbt_utils.generate_surrogate_key`マクロは、下記のように select 句の中で呼び出すことで利用できる。このマクロは、指定されたカラムを使用してハッシュ化されたサロゲートキーを生成する。
+
+```
+SELECT
+  {{ dbt_utils.generate_surrogate_key(['a', 'b', 'c', 's']) }} AS foge_id,
+  *
+FROM
+  piyo
+```
+
+## :pencil2: Documentation
+
+dbt のドキュメンテーション機能は非常に便利。`schema.yml`や`sources.yml`の情報をもとに HTML ドキュメントを生成してくれる。`schema.yml`には`description`を追加でき、テーブルやカラムの説明を追記できる。
+
+```
+models:
+  - name: table_name
+    description: description of table
+    columns:
+      - name: a
+        tests:
+          - unique
+          - not_null
+
+      - name: b
+        description: description of b
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hoge')
+              field: hoge_id
+```
+
+`dbt docs generate`コマンドでドキュメンテーションを生成できる。`pj/target/catalog.json`に HTML の元となる情報が出力され、`pj/target/index.html`を開けばドキュメントが確認できる。
+
+```
+$ dbt docs generate
+```
+
+また、画像をドキュメントを呼び出して、組み込みこともできる。`schema.yml`には下記のように記述する。
+
+```
+- name: fuga
+  description: '{{ doc("hoge__fuga") }}'
+  tests:
+    - check
+```
+
+`models/docs.md`とすることで、ドキュメントを参照先から呼び出すことができる。
+
+```
+{% docs hoge__fuga %}
+hoge hoge.
+fuga fuga.
+
+piyo piyo.
+
+![image](path_to_image)
+{% enddocs %}
+```
+
+画像などは`assets`として管理できる。`dbt_project.yml`に下記のパスを追加し、ディレクトリに画像を保存する。
+
+```
+model-paths: ['models']
+analysis-paths: ['analyses']
+test-paths: ['tests']
+seed-paths: ['seeds']
+macro-paths: ['macros']
+snapshot-paths: ['snapshots']
+asset-paths: ['assets'] -- 追加したもの
+```
+
+呼び出す際は`assets/image.png`と記述すれば OK。
+
+```
+{% docs hoge__fuga %}
+hoge hoge.
+fuga fuga.
+
+piyo piyo.
+
+![image](assets/image.png)
+{% enddocs %}
+```
+
+また、HTML ドキュメントを作成すれば自動で Data Lineage Graph も生成される。データリネージグラフはテーブルやビューの依存関係がわかるので非常に便利。
 
 ## :pencil2: Analyses
 
-todo
+analyses ディレクトリには一時的に利用する分析 SQL を保存できる。ここに保存されているものは実体化されるわけでないらしい。この段階では参照するテーブルは`ref()`で指定しておき、`analyses/hoge.sql`として保存し`dbt compile`コマンドでコンパイルすれば、`target/compiled/pj_name/analyses/hoge.sql`には、`ref()`の部分がテーブル名に置き換えられたものが作成される。この`hoge.sql`をデータウェアハウスに流せばアドホックな分析が実行できる。
+
+## :pencil2: Hooks
+
+Hooks 事前に定義されたタイミングで SQL を実行できる機能で、プロジェクト、サブフォルダ、モデルレベルで定義できる。`dbt_project.yml`に下記のに記述することで、ユーザーに権限を付与できる。タイミングも`on_run_start`、`on_run_end`、`pre-hook`、`post-hook`の 4 種類ある。
+
+```
+# Configuring models
+models:
+  pj_name:
+    +materialized: view
+    +post-hook:
+      - 'GRANT SELECT ON {{ this }} TO ROLE user_name'
+    dim:
+      +materialized: table
+    src:
+      +materialized: ephemeral
+```
 
 ## :closed_book: Reference
 
 - [dbt](https://www.getdbt.com/)
+- [Jumpstart your warehouse](https://hub.getdbt.com/)

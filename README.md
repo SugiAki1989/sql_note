@@ -162,6 +162,10 @@
 - [Page121-Fivetranでデータ転送(GoogleSpreadSheet to MySQL)](https://github.com/SugiAki1989/sql_note/blob/main/P121-Fivetran%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81(GoogleSpreadSheet%20to%20MySQL).md)
 - [Page122-DimensionalModelingについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P122-DimensionalModeling%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
 - [Page123-dbtについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P123-dbt%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
-- [P124-DigdagのServerModeについて(環境構築編).md]()
+- [Page124-DigdagのServerModeについて(環境構築編).md](https://github.com/SugiAki1989/sql_note/blob/main/P124-Digdag%E3%81%AEServerMode%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6(%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E7%B7%A8).md)
+- [Page125-DigdagのServerModeについて(入門編).md]()
+
+
+
 
 

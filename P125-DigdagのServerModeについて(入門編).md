@@ -16,7 +16,10 @@ None
 
 ## :pencil2:　 Digdag Server
 
-TODO
+TODO: Server モードのコマンド
+TODO: 画面説明
+TODO: テスト実行
+TODO: Server モードから Embulk でデータ転送
 
 ## :closed_book: Reference
 

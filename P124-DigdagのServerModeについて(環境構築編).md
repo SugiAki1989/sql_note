@@ -32,6 +32,8 @@ None
 
 # java8
 [ec2-user]$ sudo yum install -y java-1.8.0-openjdk
+# mysql
+[ec2-user]$ sudo yum -y install mysql
 ```
 
 次は EC2 で digdag 用のユーザー(ホームディレクトリは`/opt/digdag`とする)を作成する。また、各種ログを格納する保存先を作成しておく。

@@ -131,7 +131,7 @@ Uploaded:
 Use `digdag workflows` to show all workflows.
 ```
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-1.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-1.png)
 
 「Workflows > mydag」と進むと、ワークフローの詳細が確認でき、ここから手動実行することも可能。
 

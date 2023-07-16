@@ -135,15 +135,15 @@ Use `digdag workflows` to show all workflows.
 
 「Workflows > mydag」と進むと、ワークフローの詳細が確認でき、ここから手動実行することも可能。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-2.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-2.png)
 
 「RUN」から手動で実行してみると、「Sessions」に情報が追加される。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-3.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-3.png)
 
 「Sessions」の「Status: Success」をクリックすると、実行の詳細が確認できる。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-4.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-4.png)
 
 登録されているワークフローは`digdag workflows`コマンドから確認できる。
 
@@ -274,7 +274,7 @@ finish 2023-07-16T10:55:36+09:00
 
 「Sessions」に実行内容が追加されている。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-5.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-5.png)
 
 プロジェクトを削除する場合は、`digdag delete <project-name>`コマンドを実行する。
 
@@ -298,15 +298,15 @@ schedule:
  cron>: '* * * * *'
 ```
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-6.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-6.png)
 
 「save」して保存してから数分放ったらかしにしておくと、1 分ごとに定期的に実行されていることがわかる。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-7.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-7.png)
 
 `.dig`ファイルを修正する、削除するなどしてスケジューラーを停止させても良いが、ここでは WebUI の「PAUSE」ボタンから停止しておく。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-8.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-8.png)
 
 ## Server モードから Embulk でデータ転送(MySQL to MySQL)
 
@@ -345,7 +345,7 @@ Workflows:
 
 WebUI で確認すると、エラーが出ているころがわかる。エラーログを確認するためには、画像の「REFRESH LOGS」を押す。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-9.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-9.png)
 
 原因は MySQL に Embulk がアクセスするためのプラグインをインストールしてなかったこと。
 
@@ -384,7 +384,7 @@ schedule:
 
 数分間放ったらかしにしておくと、「Sessions」に定期実行の履歴が溜まっていく。どれも「Success」なので問題なくデータが転送できている。
 
-![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125−digdag-10.png)
+![Digdag WebUI](https://github.com/SugiAki1989/sql_note/blob/main/image/p125-digdag-10.png)
 
 MySQL のテーブルを確認すると、特に問題は起こっておらず、意図した通りに機能してくれている。
 

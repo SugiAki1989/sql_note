@@ -166,8 +166,8 @@
 - [Page125-DigdagのServerModeについて(入門編).md](https://github.com/SugiAki1989/sql_note/blob/main/P125-Digdag%E3%81%AEServerMode%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6(%E5%85%A5%E9%96%80%E7%B7%A8).md)
 - [Page126-Glueでデータ転送(S3 to S3).md](https://github.com/SugiAki1989/sql_note/blob/main/P126-Glue%E3%81%A7%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81(S3%20to%20S3).md)
 - [Page127-データ転送とネットワーク.md](https://github.com/SugiAki1989/sql_note/blob/main/P127-%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81%E3%81%A8%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF.md)
-- [Page128-BigQueryのArray型の基礎.md]()
-- [Page129-SQLで簡易アトリビューション分析.md]()
+- [Page128-BigQueryのArray型の基礎.md](https://github.com/SugiAki1989/sql_note/blob/main/P128-BigQuery%E3%81%AEArray%E5%9E%8B%E3%81%AE%E5%9F%BA%E7%A4%8E.md)
+- [Page129-SQLで簡易アトリビューション分析.md](https://github.com/SugiAki1989/sql_note/blob/main/P129-SQL%E3%81%A7%E7%B0%A1%E6%98%93%E3%82%A2%E3%83%88%E3%83%AA%E3%83%93%E3%83%A5%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E5%88%86%E6%9E%90.md)
 
 
 

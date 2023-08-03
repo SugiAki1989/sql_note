@@ -173,7 +173,7 @@ FROM Sequences;
 |[2,4,8,16,32]|[4,8,16,32,64]|
 |[5,10]|[10,20]|
 
-```
+```sql
 WITH tbl AS (
     SELECT ['banana', 'orange'] AS name, 'fruit' as category UNION ALL
     SELECT ['tomato', 'asparagus', 'okra', 'pea'] AS name, 'vegetable' as category
@@ -192,7 +192,7 @@ FROM
 
 この2つの配列を行としてフラット化したい場合は、下記のように書けばよさそうではあるが、これでは意図していない結果となる。`UNNEST`演算子を複数書くと、直積のような計算となってしまう。
 
-```
+```sql
 WITH tbl AS (
     SELECT ['banana', 'orange'] AS name, 'fruit' as category UNION ALL
     SELECT ['tomato', 'asparagus', 'okra', 'pea'] AS name, 'vegetable' as category
@@ -241,7 +241,7 @@ FROM
 意図したように配列をフラット化したい場合は下記のようなクエリを記述する。もちろん他の方法でも書ける。`name`を
 `offset`でインデックス付きで展開し、そのインデックスで`new_name`の値を取得する。
 
-```
+```sql
 WITH tbl AS (
   SELECT ['banana', 'orange'] AS name, 'fruit' as category UNION ALL
   SELECT ['tomato', 'asparagus', 'okra', 'pea'] AS name, 'vegetable' as category
@@ -273,7 +273,7 @@ FROM
 
 他にも配列の値に条件をつけて抽出したり、
 
-```
+```sql
 WITH Sequences AS
   (SELECT [0, 1, 1, 2, 3, 5] AS some_numbers
    UNION ALL SELECT [2, 4, 8, 16, 32] AS some_numbers
@@ -294,7 +294,7 @@ FROM Sequences;
 
 重複を除外したりできる。
 
-```
+```sql
 WITH Sequences AS
   (SELECT [0, 1, 1, 2, 3, 5] AS some_numbers)
 SELECT 
@@ -310,7 +310,7 @@ FROM Sequences;
 
 また、配列の要素を`WHERE`句でスキャンすることも出来るので、条件の値を含むレコードのみを残したい場合など便利に利用できる。
 
-```
+```sql
 WITH Sequences AS
   (SELECT 1 AS id, [0, 1, 1, 2, 3, 5] AS some_numbers
    UNION ALL SELECT 2 AS id, [2, 4, 8, 16, 32] AS some_numbers
@@ -351,7 +351,7 @@ ON
 
 他にも、`ARRAY_AGG`関数で行を配列に集約できる。
 
-```
+```sql
 WITH alphabets AS
   (SELECT "a" AS alphabet
    UNION ALL SELECT "c" AS alphabet
@@ -366,7 +366,7 @@ FROM alphabets;
 
 これは`GROUP BY`句とも併用できるので、組み合わせると非常に便利。
 
-```
+```sql
 WITH alphabets AS
   (SELECT "a" AS alphabet, "g1" AS category,
    UNION ALL SELECT "c" AS alphabet, "g1" AS category,
@@ -391,7 +391,7 @@ GROUP BY
 
 `ARRAY_TO_STRING`関数を利用して、配列から文字列への変換できたり、`ARRAY_CONCAT`関数で配列を結合できたりする。
 
-```
+```sql
 SELECT
   ARRAY_TO_STRING(arr, ".", "N") AS non_empty_string,
   ARRAY_TO_STRING(arr, ".", "") AS empty_string,

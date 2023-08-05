@@ -168,17 +168,7 @@
 - [Page127-データ転送とネットワーク.md](https://github.com/SugiAki1989/sql_note/blob/main/P127-%E3%83%87%E3%83%BC%E3%82%BF%E8%BB%A2%E9%80%81%E3%81%A8%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF.md)
 - [Page128-BigQueryのArray型の基礎.md](https://github.com/SugiAki1989/sql_note/blob/main/P128-BigQuery%E3%81%AEArray%E5%9E%8B%E3%81%AE%E5%9F%BA%E7%A4%8E.md)
 - [Page129-SQLで簡易アトリビューション分析.md](https://github.com/SugiAki1989/sql_note/blob/main/P129-SQL%E3%81%A7%E7%B0%A1%E6%98%93%E3%82%A2%E3%83%88%E3%83%AA%E3%83%93%E3%83%A5%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E5%88%86%E6%9E%90.md)
-- [WIP Page130-Google BigQuery: The Definitive Guide chapter01. What Is Google BigQuery? を読む]()
-- [WIP Page131-Google BigQuery: The Definitive Guide chapter02. Query Essentials を読む]()
-- [WIP Page132-Google BigQuery: The Definitive Guide chapter03. Data Types, Functions, and Operators を読む]()
-- [WIP Page133-Google BigQuery: The Definitive Guide chapter04. Loading Data into BigQuery を読む]()
-- [WIP Page134-Google BigQuery: The Definitive Guide chapter05. Developing with BigQuery を読む]()
-- [WIP Page135-Google BigQuery: The Definitive Guide chapter06. Architecture of BigQuery を読む]()
-- [WIP Page136-Google BigQuery: The Definitive Guide chapter07. Optimizing Performance and Cost を読む]()
-- [WIP Page137-Google BigQuery: The Definitive Guide chapter08. Advanced Queries を読む]()
-- [WIP Page138-Google BigQuery: The Definitive Guide chapter09. Machine Learning in BigQuery を読む]()
-- [WIP Page139-Google BigQuery: The Definitive Guide chapter10. Administering and Securing BigQuery を読む]()
-
+- [Page130-Google BigQuery: The Definitive Guide を読む]()
 
 
 

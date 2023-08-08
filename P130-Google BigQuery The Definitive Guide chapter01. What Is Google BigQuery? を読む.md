@@ -462,7 +462,7 @@ LIMIT 30
 |2023-08-06 14:15:42.000000 UTC|688|
 |2023-08-06 14:10:38.000000 UTC|688|
 |2023-08-06 14:05:34.000000 UTC|678|
-|2023-08-06 14:00:30.000000 UTC|680|
+|2023-08-06 14:00:30.000000 UTC|680| -- 14時台の平均は677
 |2023-08-06 13:55:26.000000 UTC|679|
 |2023-08-06 13:50:22.000000 UTC|661|
 |2023-08-06 13:45:18.000000 UTC|656|
@@ -473,7 +473,7 @@ LIMIT 30
 |2023-08-06 13:19:54.000000 UTC|694|
 |2023-08-06 13:14:22.000000 UTC|655|
 |2023-08-06 13:09:18.000000 UTC|660|
-|2023-08-06 13:04:13.000000 UTC|636|
+|2023-08-06 13:04:13.000000 UTC|636| -- 13時台の平均は666
 |2023-08-06 12:59:08.000000 UTC|600|
 |2023-08-06 12:54:04.000000 UTC|533|
 |2023-08-06 12:49:00.000000 UTC|489|
@@ -526,7 +526,7 @@ FROM
 ```
 |timestamp_1hour|avg_co2_ppm|
 |:----|:----|
-|2023-08-06 13:00:00|678.72|
+|2023-08-06 13:00:00|666|
 
 
 クエリをスケジュールするためには、BigQuery Data Transfer APIが有効でないといけないので、有効にしてからスケジュールボタンから設定を行う。
@@ -553,17 +553,355 @@ FROM
 ```
 |timestamp_1hour|avg_co2_ppm|
 |:----|:----|
-|2023-08-06 13:00:00|678.72|
-|2023-08-06 14:00:00|672.0|
+|2023-08-06 13:00:00|666|
+|2023-08-06 14:00:00|677|
+|2023-08-06 15:00:00|762|
 
 なんか検索するとBigQueryの時間関係はややこしいみたいなので、重点的におさらいしておく必要がありそう。
 
-
 ## :pencil2: Chapter5　Developing with　BigQuery
 
-## :pencil2: Chapter6
+### INFORMATION SCHEMA
+`dataset.INFORMATION_SCHEMA.name`には各種データセットに関する情報が保存されているので、例えば`ch04.INFORMATION_SCHEMA.TABLES`というテーブルを選択すれば、テーブル情報を引き出すことが出来る。
 
-## :pencil2: Chapter7
+```
+SELECT
+  * EXCEPT(ddl)
+FROM
+  ch04.INFORMATION_SCHEMA.TABLES
+```
+
+|table_catalog|table_schema|table_name|table_type|is_insertable_into|is_typed|creation_time|base_table_catalog|base_table_schema|base_table_name|snapshot_time_ms|default_collation_name|upsert_stream_apply_watermark|
+|:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
+|sqlsandbox376108|ch04|college_scorecard_etl|BASE TABLE|YES|NO|2023-08-05 19:01:40.791000 UTC| | | | NULL| |
+|sqlsandbox376108|ch04|co2|EXTERNAL|NO|NO|2023-08-06 03:11:30.073000 UTC| | | | |NULL| |
+
+
+### shell script
+BigQuery の SQL クエリを実行して結果を取得したければ、HTTP POST リクエストを発行するシェルスクリプトを作成すればよい。`read -d '' QUERY_TEXT << EOF`は`QUERY_TEXT`という名前の環境変数にSQLを格納するためのヒアドキュメントを開始する。そして、`bq query --use_legacy_sql=false $QUERY_TEXT`の部分で、`bq query`コマンドを使用して、BigQueryに対してSQLを実行する。`--use_legacy_sql=false`フラグは、Standard SQL構文を使用することを示し、`$QUERY_TEXT`は環境変数`QUERY_TEXT`の中身を展開して実際のSQLとして使用する。
+
+```
+#!/bin/bash
+
+read -d '' QUERY_TEXT << EOF
+SELECT 
+  start_station_name
+  , AVG(duration) as duration
+  , COUNT(duration) as num_trips
+FROM \`bigquery-public-data\`.london_bicycles.cycle_hire
+GROUP BY start_station_name 
+ORDER BY num_trips DESC 
+LIMIT 5
+EOF
+
+bq query --use_legacy_sql=false $QUERY_TEXT
+
+```
+
+実行すると結果が得られる。
+
+```
+$ ./bq_query.sh
++-------------------------------------+--------------------+-----------+
+|         start_station_name          |      duration      | num_trips |
++-------------------------------------+--------------------+-----------+
+| Hyde Park Corner, Hyde Park         | 2475.2221245805335 |    671389 |
+| Belgrove Street , King's Cross      | 1040.4981000777511 |    592919 |
+| Waterloo Station 3, Waterloo        |  896.5945201320634 |    527020 |
+| Albert Gate, Hyde Park              | 2212.7423641803734 |    460887 |
+| Black Lion Gate, Kensington Gardens |  2602.048261964297 |    459513 |
++-------------------------------------+--------------------+-----------+
+```
+
+クエリの結果を得るのではなく、クエリの情報を得るためにはHTTP POST リクエストを発行するシェルスクリプトを作成すればよい。
+
+```sh
+#!/bin/bash
+
+PROJECT=$(gcloud config get-value project)
+
+read -d '' QUERY_TEXT << EOF
+SELECT 
+  start_station_name
+  , AVG(duration) as duration
+  , COUNT(duration) as num_trips
+FROM \`bigquery-public-data\`.london_bicycles.cycle_hire
+GROUP BY start_station_name 
+ORDER BY num_trips DESC 
+LIMIT 5
+EOF
+
+read -d '' request << EOF
+{
+ "useLegacySql": false,
+ "useQueryCache": true,
+ "query": \"${QUERY_TEXT}\"
+}
+EOF
+
+request=$(echo "$request" | tr '\n' ' ')
+access_token=$(gcloud auth application-default print-access-token)
+
+curl -H "Authorization: Bearer $access_token"  \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d "$request" \
+    "https://www.googleapis.com/bigquery/v2/projects/$PROJECT/queries"
+```
+
+実行結果はこちら。
+
+```
+$ ./rest_query.sh
+{
+  "kind": "bigquery#queryResponse",
+  "schema": {
+    "fields": [
+      {
+        "name": "start_station_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "duration",
+        "type": "FLOAT",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "num_trips",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "jobReference": {
+    "projectId": "sqlsandbox376108",
+    "jobId": "job_bufMknrao50bnwAYXYb283tb6EBe",
+    "location": "EU"
+  },
+  "totalRows": "5",
+  "rows": [
+    {
+      "f": [
+        {
+          "v": "Hyde Park Corner, Hyde Park"
+        },
+        {
+          "v": "2475.222124580533"
+        },
+        {
+          "v": "671389"
+        }
+      ]
+    },
+    (snip),
+    {
+      "f": [
+        {
+          "v": "Black Lion Gate, Kensington Gardens"
+        },
+        {
+          "v": "2602.0482619642976"
+        },
+        {
+          "v": "459513"
+        }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "3101263659",
+  "jobComplete": true,
+  "cacheHit": false
+}
+```
+
+これ以降の内容はPythonからBigQueryを利用するための方法が色々と記載されていたので、今は必要ないのでスキップ。
+
+## :pencil2: Chapter6　Architecture of　BigQuery
+### Query 
+BigQueryは、Google Cloudの各リージョンにまたがる複数のアベイラビリティゾーンにある、相互に関連する数十のマイクロサービスに数十万の実行タスクを持つ大規模な分散システム、この章ではBigQueryの仕組みを簡略化して解説される。まずはクエリの仕組みから。
+
+- 1. HTTP POST: 
+クライアントはBigQueryエンドポイントにPOSTを送る。curlでも送れるので、大抵のプログラミング言語から利用できる。BigQuery APIのドキュメントは[こちら](https://cloud.google.com/bigquery/docs/reference/rest/)
+- 2. Routing: 
+URLの一部にプロジェクト名があるのでそれをヒントにする。あとはプロジェクトのリージョンの制限なども考慮される。データセットは場所と紐づくので、BigQueryはデータセットの地域を調べてその地域にルーティングする。
+- 3. Job Server: 
+ジョブサーバは、呼び出し元がジョブを含むプロジェクトに課金されるクエリの実行を許可されていることを確認するために認証を行う。問題なければジョブサーバはリクエストを適切なクエリサーバに送信する。
+- 4. Query engine: 
+クエリ・マスターはクエリ全体の実行を担当する。クエリー・マスターはメタデータ・サーバーと連絡を取り、物理データがどこにあり、どのようにパーティショニングされているかを確認する。クエリサーバーがクエリのデータ量を把握し、クエリプランを作成。その後、クエリマスターはスケジューラーにスロット(クエリワーカーシャード上の実行スレッド)を要求する。
+- 5. Returning the query results: 
+結果はクエリのメタデータとともに分散リレーショナルデータベースであるSpannerに格納されるSpannerのデータは、クエリが実行されているのと同じ 領域 に配置される。残りのデータはColossusに書き込まれる。BigQuery APIは再接続できるように設計されている。ジョブサーバはタイムアウトする前にジョブIDをクライアントに返し、クライアントはそのジョブを検索して結果を得ることができる。BigQueryの結果は24時間保存され、機能的にはテーブルと同等であり、テーブルのようにクエリできる。
+
+これ以降はQuery EngineのDremelの細かい話や、クエリの実行計画の詳細がまとめられている。
+
+### Storage
+BigQueryは数エクサバイトのデータを、数十のリージョンにある数百万の物理ディスクに分散して保存する。Colossusは、Google全体で使用されている分散ストレージシステムであり、大規模分散ストレージシステムGoogle File System（GFS）を進化させたもの。ディスクが壊れてもデータを失わないようにするためにレプリカを作成するとのこと。
+
+ここらへんの詳しい話(erasure encoding、Storage formatのCapacitor)は書籍に書いてあるのと、よくわからないのでパスする。つカラムナー・ストアの話も少し触れられている。
+
+### Partitioning
+
+BigQueryでパーティショニングを行うと、大きな論理テーブルを小さなパーティションに分割し、必要な部分だけをクエリすることができる。テーブルを日付でパーティショニングしておけば、パーティショニングされたテーブルを使用して、特定の日時のデータのみを効率的に読み取れる。パーティションは基本的に軽量テーブルであり、パーティションのデータは他のパーティションとは物理的に別の場所に保存される。
+
+パーティションの有効期限を設定すると、日付ベースのパーティションは、一定期間が経過すると期限切れとなって削除される。このように、パーティションは、複数のテーブルを効率的に管理できる利点がある。
+
+クエリでも使用でき、このパーテーションの日付範囲をまたいでデータを取得できる、不要なスキャンを回避できる。パーティションは 、カーディナリティの低い、異なる値の数が少ないカラムで利用する。カーディナリティが高いのであれば、クラスタリングを使うべき。クラスタリングは例えば会員IDのようなカラムを利用することで、特定の会員ID群をまとめて管理することで効率を高める。
+
+パーテーションはメタデータを持っており、指定されたパーテーションのメタデータを見れば、物理データにアクセスする必要もなく、スキャンするサイズがわかる。
+
+## :pencil2: Chapter7　Optimizing　　Performance and Cost
+
+### Principles of Performance
+
+パフォーマンスチューニングは開発段階の最後に行うべきで、わずかなパフォーマンスの向上のために、テーブルスキーマやクエリを難解にするよりも、柔軟なテーブルスキーマと読みやすく保守性の高いクエリを持たせる方がはるかに優れている。
+
+BigQueryの料金体系には大きく2つあり、1つはオンデマンド料金で、もう1つは定額制。オンデマンドの料金プランは、コストはクエリによって処理されるデータ量に比例するため、クエリが処理するデータ量を少なくすることがコスト削減につながる。WebUIから実行前のスキャンする量を見積もれるので目安として利用する。
+
+`bq`コマンドラインクライアントの場合は`-dry_run`を指定する。`-maximum_bytes_billed`パラメータを指定して、クエリが処理できるデータ量に制限をかけることもできる。下記のクエリでコストの高いクエリを見つけることが出来る。
+
+```sql
+SELECT
+job_id
+, query
+, user_email
+, total_bytes_processed
+, total_slot_ms
+FROM `pj`.INFORMATION_SCHEMA.JOBS_BY_PROJECT
+WHERE EXTRACT(YEAR FROM creation_time) = 2023
+ORDER BY total_bytes_processed DESC
+LIMIT 5
+```
+
+### Measuring Query Speed
+クエリの処理時間を計測したければAPI経由でクエリを発行することで計測は可能。計測するSQLを定義、キャッシュを無効化して、必要なコンフィグ情報とともにループを回して、`time`で計測する。あとは計測時間を繰り返し回数でわる。
+
+```bash
+#!/bin/bash
+
+NUM_TIMES=3
+
+read -d '' QUERY_TEXT << EOF
+SELECT 
+  start_station_name
+  , AVG(duration) as duration
+  , COUNT(duration) as num_trips
+FROM \`bigquery-public-data\`.london_bicycles.cycle_hire
+GROUP BY start_station_name 
+ORDER BY num_trips DESC 
+LIMIT 5
+EOF
+
+read -d '' request_nocache << EOF
+{
+ "useLegacySql": false,
+ "useQueryCache": false,
+ "query": \"${QUERY_TEXT}\"
+}
+EOF
+request_nocache=$(echo "$request_nocache" | tr '\n' ' ')
+
+access_token=$(gcloud auth application-default print-access-token)
+PROJECT=$(gcloud config get-value project)
+echo "Running query repeatedly; please divide reported times by $NUM_TIMES"
+
+time for i in $(seq 1 $NUM_TIMES); do
+echo -en "\r ... $i / $NUM_NUMTIMES ..."
+curl --silent \
+    -H "Authorization: Bearer $access_token"  \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d "$request" \
+    "https://www.googleapis.com/bigquery/v2/projects/$PROJECT/queries" > /dev/null
+done
+```
+
+大体2秒ほどなので、平均実行時間は0.6秒くらいとわかる。
+
+```
+real	0m2.015s
+user	0m0.060s
+sys  	0m0.035s
+```
+
+他にもクエリを効率化するための情報として`jobid`を利用できる。
+
+```bash
+#!/bin/bash
+
+JOBID=job_wiXp6taIipYjWHzGO1m2LC6awDCR 
+
+access_token=$(gcloud auth application-default print-access-token)
+PROJECT=$(gcloud config get-value project)
+
+echo "$request"
+curl --silent \
+    -H "Authorization: Bearer $access_token"  \
+    -X GET \
+    "https://www.googleapis.com/bigquery/v2/projects/$PROJECT/jobs/${JOBID}"
+```
+
+結果には、データ待ち時間、クエリにおける計算に対するI/Oの割合、読み込みデータ、シャッフルされたデ
+ータ、書き出されたデータに関する情報が含まれる。
+
+```
+"waitRatioAvg": 0.012448132780082987,
+"waitMsAvg": "3",
+"waitRatioMax": 0.012448132780082987,
+"waitMsMax": "3",
+"readRatioAvg": 0,
+"readMsAvg": "0",
+"readRatioMax": 0,
+"readMsMax": "0",
+"computeRatioAvg": 0.024896265560165973,
+"computeMsAvg": "6",
+"computeRatioMax": 0.024896265560165973,
+"computeMsMax": "6",
+"writeRatioAvg": 0.066390041493775934,
+"writeMsAvg": "16",
+"writeRatioMax": 0.066390041493775934,
+"writeMsMax": "16",
+"shuffleOutputBytes": "228",
+"shuffleOutputBytesSpilled": "0",
+"recordsRead": "50",
+"recordsWritten": "5",
+"parallelInputs": "1",
+"completedParallelInputs": "1",
+"status": "COMPLETE",
+```
+
+あとはWebUIからクエリプラン情報を可視化したものを見ることも出来る。
+
+### Increasing Query Speed
+
+クエリを効率化するための方法が実際のクエリ例とともに紹介されている。クエリ例は書籍にお任せして、ここでは意識する点を箇条書きでまとめておく。
+
+- SELECTで目的意識を持つ: カラムナファイルフォーマットなので`*`は使わず、カラムを指定する
+- 読み取りデータの削減: フィルタやグループ化には`hoge_id`ではなく`hoge_name`を利用する
+- 高価な計算の回数を減らす: ジオ分析の距離計算は高価なので、最初から用意しておいて`join`の処理を避ける
+- 以前のクエリの結果をキャッシュする: 空白の有り無しでキャッシュされるかが変わる
+- 中間結果のキャッシュ: 一時テーブルやマテビューを活用し、I/Oの増加を犠牲にして全体的なパフォーマンスを向上させる
+- BI Engineによるクエリの高速化: BIで頻繁にアクセスするテーブル、ダッシュボード、集計、フィルタなどがある場合、BI Engineを利用する
+- 効率的なJOINの実行: `Join`は高価なので、非正規化を積極的に利用する
+- 大きなテーブルの自己結合を避ける: ウインドウ関数を優先して利用する
+- 結合するデータを減らす: 結合するのであれば、予め集計して小さくしておく
+- 事前に計算された値での結合: 何度も、毎回計算するのではなく、最初に計算して、それを使い回す
+- 大きなソートの制限: ソートはワーカーのメモリを圧迫する。小さくしてからソートする
+- データ・スキュー: グループ化する際に、各グループでレコードサイズに歪みがあるとワーカーのメモリを圧迫するので、`LIMIT`を使う方法もある
+- ユーザー定義関数の最適化: JavaScriptのUDFをサポートしているが使わない。SQLでUDFを記述する。
+- 近似集約関数の使用: `COUNT(DISTINCT ...)`の代わりに、小さな不確実性が許容できるのであれ`APPROX_COUNT_DISTINCT`を使う。他にも、`APPROX_TOP_COUNT`や`APPROX_TOP_SUM`を使う
+- count-distinct 問題: HyperLogLog++アルゴリズムをサポートしているので、`HLL_COUNT.MERGE`を利用する
+- ネットワーク・オーバーヘッドの最小化: データセットは同じリージョンに配置するしてオーバーヘッドを減らす
+- 圧縮されたレスポンス: REST APIを直接呼び出す場合、HTTPヘッダでgzipを指定する
+- 複数のリクエストのバッチ処理: REST APIを直接呼び出す場合、multipart/mixed content typeを使用する
+- 効率的なストレージフォーマットの選択: 外部データソースではなく、ネイティブテーブルを使用する
+- ステージングバケットでのライフサイクル管理の設定: Google Cloud StorageにステージングしてBigQueryにロードする場合は、データのロード後にGoogle Cloud Storageのデータを削除する
+- 構造体の配列としてデータを格納する: データを配列として格納すると、テーブルの行数は劇的に減少する
+- 地理タイプとしてデータを保存する: 地理データを扱うのであれば`GEOGRAPHY`型を検討する
+- パーティショニングされたテーブル: テーブルの保存はパーテーションを使用する
+- テーブルのクラスタリング: カーディナリティが高いものはクラスタリングを使用する
+
+クエリ例も豊富なので、個人的にはすごく役に立ったチャプターの1つ。
+
 
 ## :pencil2: Chapter8
 

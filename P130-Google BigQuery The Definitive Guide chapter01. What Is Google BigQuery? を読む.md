@@ -903,9 +903,367 @@ curl --silent \
 クエリ例も豊富なので、個人的にはすごく役に立ったチャプターの1つ。
 
 
-## :pencil2: Chapter8
+## :pencil2: Chapter8　Advanced Queries
 
-## :pencil2: Chapter9
+BigQueryでサポートされる標準SQLのパーサとアナライザは、ZetaSQLとしてオープンソース化されている。
+
+### Named parameters
+
+pythonなどからクエリを発行する際に、SQLの内容をパラメタ化できる。下記の例は名前付きパラメタの例。他にも、タイムスタンプ・パラメタ、位置パラメタ、配列と構造体のパラメタなどが利用できる。
+
+```sql
+query = """
+SELECT
+start_station_name
+, AVG(duration) as avg_duration
+FROM
+`bigquery-public-data`.london_bicycles.cycle_hire
+WHERE
+start_station_name LIKE CONCAT('%', @STATION, '%')
+AND duration BETWEEN @MIN_DURATION AND @MAX_DURATION
+GROUP BY start_station_name
+"""
+```
+
+### SQL User-Defined Functions
+
+BigQueryでは、ユーザーが定義した関数をUDF関数と呼ぶ。下記の例は、曜日名を返すUDF関数。
+
+```sql
+CREATE TEMPORARY FUNCTION dayOfWeek(x TIMESTAMP) AS
+(
+['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+[ORDINAL(EXTRACT(DAYOFWEEK from x))]
+);
+CREATE TEMPORARY FUNCTION getDate(x TIMESTAMP) AS
+(
+EXTRACT(DATE FROM x)
+);
+```
+
+クエリ間で再利用したい関数がある場合、データセットに関数を保存し、任意の数のクエリから参照する方法が良い。`TEMPORARY`を外し、保存するデータセットを指定する。
+
+```sql
+CREATE OR REPLACE FUNCTION ch08eu.dayOfWeek(x TIMESTAMP) AS (
+['日','月','火','水','木','金','土']
+[ORDINAL(EXTRACT(DAYOFWEEK from x))] 。
+);
+```
+
+パブリックUDFも存在しており、中央値の例がまさにパブリックUEFの一例。
+
+```sql
+CREATE OR REPLACE FUNCTION fhoffa.x.median (arr ANY TYPE) AS ((
+SELECT IF (MOD(ARRAY_LENGTH(arr), 2) = 0,
+( arr[OFFSET(DIV(ARRAY_LENGTH(arr), 2) - 1)] +
+arr[OFFSET(DIV(ARRAY_LENGTH(arr), 2))] ) / 2,
+arr[OFFSET(DIV(ARRAY_LENGTH(arr), 2))]
+)
+FROM (SELECT ARRAY_AGG(x ORDER BY x) AS arr FROM UNNEST(arr) AS x)
+));
+
+```
+
+`fhoffa`データセットは公開されているので、誰でも利用可能である。
+
+```
+with the longest median duration of trips:
+SELECT
+start_station_name
+, COUNT(*) AS num_trips
+, fhoffa.x.median(ARRAY_AGG(tripduration)) AS typical_duration
+FROM `bigquery-public-data`.new_york_citibike.citibike_trips
+GROUP BY start_station_name
+HAVING num_trips > 1000
+ORDER BY typical_duration DESC
+LIMIT 5
+```
+
+### Defining constants
+
+`with`句の中に定数を定義することで、その後のクエリで予め設定した定数を利用できる。このようなクエリにしておけは、定数の変更があった際は簡単に修正できる。
+
+```sql
+WITH params AS (
+SELECT 600 AS DURATION_THRESH
+)
+SELECT
+start_station_name
+, COUNT(duration) as num_trips
+FROM
+`bigquery-public-data`.london_bicycles.cycle_hire
+, params
+WHERE duration >= DURATION_THRESH
+GROUP BY start_station_name
+ORDER BY num_trips DESC
+LIMIT 5
+```
+
+### Working with Arrays
+
+BigQueryにおける配列は、同じデータ型の値を含む順序付きリストとして扱われる。このテーブルを保存して、後で他のクエリやBigQuery から分析することもできるが、テーブルから読み込んだ行は順序が保証されていない。
+
+```sql
+SELECT
+  bike_id,
+  COUNT(*) AS num_trips
+FROM
+  `bigquery-public-data`.london_bicycles.cycle_hire
+GROUP BY
+  bike_id
+ORDER BY
+  num_trips DESC
+LIMIT
+  5
+```
+
+|bike_id|num_trips|
+|:----|:----|
+|12942|8197|
+|11077|8063|
+|10601|7970|
+|12779|7941|
+|12926|7716|
+
+順序を維持する必要性がある場合、配列に押し込むことで順序を維持できる。また、マテリアライズド・ビューを使用することでも解決できる。
+
+```sql
+WITH
+  numtrips AS (
+  SELECT
+    bike_id AS id,
+    COUNT(*) AS num_trips
+  FROM
+    `bigquery-public-data`.london_bicycles.cycle_hire
+  GROUP BY
+    bike_id ) 
+SELECT
+  ARRAY_AGG(STRUCT(id,
+      num_trips)
+  ORDER BY
+    num_trips DESC
+  LIMIT
+    5) AS bike
+FROM
+  numtrips
+```
+
+### Using arrays for generating data
+
+前にも書いたが、データを生成するときに配列は便利。
+
+```sql
+WITH days AS (
+SELECT
+GENERATE_DATE_ARRAY('2019-06-23', '2019-08-22', INTERVAL 10 DAY) AS summer
+)
+SELECT summer_day
+FROM days, UNNEST(summer) AS summer_day
+```
+
+|summer_day|
+|:----|
+|2019-06-23|
+|2019-07-03|
+|2019-07-13|
+|2019-07-23|
+|2019-08-02|
+|2019-08-12|
+|2019-08-22|
+
+2カラム以上作りたいときは、配列とオフセットを利用する。
+
+```sql
+WITH
+  days AS (
+  SELECT
+    GENERATE_DATE_ARRAY('2019-06-23', '2019-08-22', INTERVAL 10 DAY) AS summer,
+    ['Lak', 'Jordan', 'Graham'] AS minions )
+SELECT
+  summer[ORDINAL(dayno)] AS summer_day,
+  minions[
+OFFSET
+  (MOD(dayno, ARRAY_LENGTH(minions)))] AS minion
+FROM
+  days,
+  UNNEST(GENERATE_ARRAY(1,ARRAY_LENGTH(summer),1)) dayno
+ORDER BY
+  summer_day ASC
+```
+
+|summer_day|minion|
+|:----|:----|
+|2019-06-23|Jordan|
+|2019-07-03|Graham|
+|2019-07-13|Lak|
+|2019-07-23|Jordan|
+|2019-08-02|Graham|
+|2019-08-12|Lak|
+|2019-08-22|Jordan|
+
+### Building queries dynamically
+
+`INFORMATION_SCHEMA`を使用することで、データセット内のすべてのテーブルに関するメタデータを含んでいる。テーブルのカラム名を取り出したいときは下記のようにすればよい。
+
+```sql
+SELECT column_name
+FROM `bigquery-public-data`.irs_990.INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'irs_990_2015'
+```
+
+|column_name|
+|:----|
+|ein|
+|elf|
+|tax_pd|
+|subseccd|
+|s501c3or4947a1cd|
+|schdbind|
+|(snip)|
+|othrinc509|
+|totsupp509|
+
+カラム名をすべて`SELECT`文に入れたい場合、手作業やその他プログラムから作るのも手間がかかるが、このメタデータを使って動的にSQLを生成することもできる。
+
+```sql
+WITH columns AS (
+SELECT column_name
+FROM `bigquery-public-data`.irs_990.INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'irs_990_2015' AND column_name != 'ein'
+)
+SELECT CONCAT(
+'SELECT ein, ARRAY_AGG(STRUCT(',
+ARRAY_TO_STRING(ARRAY(SELECT column_name FROM columns), ',\n '),
+'\n) FROM `bigquery-public-data`.irs_990.irs_990_2015\n',
+'GROUP BY ein')
+```
+実際に生成されるSQLは下記の通り。
+
+```sql
+SELECT ein, ARRAY_AGG(STRUCT(elf,
+ tax_pd,
+ subseccd,
+ s501c3or4947a1cd,
+ schdbind,
+ (snip)
+ othrinc509,
+ totsupp509
+) FROM `bigquery-public-data`.irs_990.irs_990_2015
+GROUP BY ein
+```
+### Time travel
+
+タイムトラベルという機能があり、7日間までテーブルの履歴を参照できる。例えば、6時間前のテーブルを照会するには、`SYSTEM_TIME`を使用すればよい。
+
+```sql
+SELECT
+  *
+FROM
+  `bigquery-public-data`.london_bicycles.cycle_stations FOR SYSTEM_TIME AS OF TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 6 HOUR)
+```
+
+### Data Definition Language and Data Manipulation Language
+
+新しいテーブルを作成したければCTASを利用すればよいが、オプションも同時に設定でき、有効期限やタイムスタンプ、ラベルなどが設定できる。
+
+```sql
+CREATE OR REPLACE TABLE
+  ch08eu.hydepark_stations OPTIONS( expiration_timestamp=TIMESTAMP "2020-01-01 00:00:00 UTC",
+    description="Stations with Hyde Park in the name",
+    labels=[("cost_center", "abc123")] ) AS
+SELECT
+  * EXCEPT(longitude,
+    latitude),
+  ST_GEOGPOINT(longitude, latitude) AS location
+FROM
+  `bigquery-public-data.london_bicycles.cycle_stations`
+WHERE
+  name LIKE '%Hyde%'
+```
+
+変更する場合は`ALTER TABLE`で変更できる。
+
+```sql
+ALTER TABLE ch08eu.hydepark_rides
+SET OPTIONS(
+expiration_timestamp=TIMESTAMP「2021-01-01 00:00:00 UTC」、require_partition_filter=True、
+labels=[("cost_center", "def456")]。
+)
+```
+
+もうすでに利用しているが、`INSERT`など基本的なDMLは利用できる。
+
+```sql
+INSERT ch08eu.hydepark_rides
+SELECT
+start_date AS start_time
+  , duration
+  , start_station_id
+  , start_station_name
+  , end_station_id
+  , end_station_name
+FROM
+  `bigquery-public-data`.london_bicycles.cycle_hire
+WHERE
+  start_station_name LIKE '%Hyde%'
+```
+
+### MERGE statement
+
+`MERGE`文は、`INSERT`、`UPDATE`、`DELETE`操作をアトミックに組み合わせたもので、1つの文として実行される。ソーステーブルからのレコードがターゲットテーブルに挿入され、各行に対して一連の操作が実行される。`MATCHED`、`NOT MATCHED BY TARGET`、`NOT MATCHED BY SOURCE`の3つのシナリオで、異なる操作を定義することが可能。読んでもわかりにくいので、見たほうがはやい。
+
+```sql
+MERGE ch08eu.hydepark_stations AS T
+USING
+  (SELECT *
+  FROM `bigquery-public-data`.london_bicycles.cycle_stations
+  WHERE name LIKE '%Hyde%') AS S
+ON T.id = S.id
+WHEN MATCHED THEN
+  UPDATE
+    SET bikes_count = S.bikes_count
+WHEN NOT MATCHED BY TARGET THEN
+  INSERT(id, installed, locked, name, bikes_count)
+  VALUES(id, installed, locked, name, bikes_count)
+WHEN NOT MATCHED BY SOURCE THEN
+  DELETE
+```
+
+このSQLは、`ch08eu.hydepark_stations` テーブルを対象として指定している。そのため、このテーブルにデータが統合されるか、更新、挿入、削除されることになる。そして、サブクエリを使用して、ソーステーブル（`bigquery-public-data.london_bicycles.cycle_stations`）から条件を満たすデータを取得し、エイリアス `S` で参照します。ここでは、`name` 列に `'Hyde'` という文字列を含むデータを取得している。
+
+ターゲットテーブル（`ch08eu.hydepark_stations`）とソーステーブル（`S`）のデータを、`id` 列をキーとして結合し、対応するデータをマッチングさせる。マッチングが成功した場合、つまりターゲットテーブルとソーステーブルの結合に成功した場合、ターゲットテーブルの該当する行のデータをソーステーブルのデータで更新。ここでは、`bikes_count` 列のデータを `S.bikes_count` の値で更新。ターゲットテーブルに存在しないソーステーブルのデータがある場合、新しい行として挿入する。つまり、「ターゲットテーブルにはないがソーステーブルにあるデータ」が対応する。そして、ソーステーブルに存在しないターゲットテーブルのデータがある場合、それを削除します。これにより、ターゲットテーブルのデータが不要である場合にそれを削除できる。
+
+### Hash Algorithms
+
+BigQueryは一般的なハッシュアルゴリズムもサポートしている。フィンガープリントアルゴリズムやMD5とSHAも利用可能。
+
+```sql
+WITH identifier AS (
+SELECT
+CONCAT(
+CAST(bike_id AS STRING), '***',
+CAST(start_date AS STRING), '***',
+CAST(start_station_id AS STRING)
+) AS rowid
+FROM `bigquery-public-data.london_bicycles.cycle_hire`
+LIMIT 10
+)
+SELECT
+rowid, FARM_FINGERPRINT(rowid) AS fingerprint
+FROM identifier
+;
+
+SELECT
+name
+, MD5(name) AS md5_
+, SHA256(name) AS sha256_
+, SHA512(name) AS sha512_
+FROM UNNEST(['Joe Customer', 'Jane Employee']) AS name
+```
+
+## :pencil2: Chapter9 
+
+BigQueryのBigQueryMLは一旦パス。必要なときに見返してメモする。
 
 ## :closed_book: Reference
 

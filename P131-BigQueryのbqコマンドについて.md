@@ -179,15 +179,15 @@ Query successfully validated. Assuming the tables are not modified, running this
 
 |オプション|内容|
 |:---|:---|
-|`--append_table={true|false}`|宛先テーブルにデータを追加するときは`true`|
+|`--append_table=true or false`|宛先テーブルにデータを追加するときは`true`|
 |`--destination_table=TABLE`|クエリ結果が TABLE に保存される。TABLE は `PROJECT:DATASET.TABLE` の形式で指定。|
-|`--dry_run={true|false}`|クエリは検証されるが、実行されない。|
+|`--dry_run=true or false`|クエリは検証されるが、実行されない。|
 |`--label=KEY:VALUE`|クエリジョブのラベル。|
 |`--max_rows=MAX_ROWS`|クエリ結果で返す行数。|
 |`--maximum_bytes_billed=MAX_BYTES`|クエリに対して課金されるバイト数を制限する。単位はバイトなので注意。30MBは30000000と記載。|
 |`--parameter={PATH_TO_FILE|PARAMETER}`|パラメタリストを含む JSON ファイルか、`NAME:TYPE:VALUE` 形式のパラメータを指定|
-|`--replace={true|false}`|クエリ結果で宛先テーブルを上書きするかどうか。|
-|`--require_cache={true|false}`|キャッシュから結果を取得できる場合にのみ、クエリが実行される。|
+|`--replace=true or false`|クエリ結果で宛先テーブルを上書きするかどうか。|
+|`--require_cache=true or false`|キャッシュから結果を取得できる場合にのみ、クエリが実行される。|
 |`--schedule="SCHEDULE"`|定期的にスケジュールされたものにする。`--schedule="every 24 hours"`など。|
 
 `bq query`コマンドのオプションを複数使う場合はバックスラッシュで改行できる。これは新たにテーブルを作成する際のコマンド例。

@@ -171,4 +171,4 @@
 - [Page130-Google BigQuery: The Definitive Guide を読む](https://github.com/SugiAki1989/sql_note/blob/main/P130-Google%20BigQuery%20The%20Definitive%20Guide%20chapter01.%20What%20Is%20Google%20BigQuery%3F%20%E3%82%92%E8%AA%AD%E3%82%80.md)
 - [Page131-BigQueryのbqコマンドについて](https://github.com/SugiAki1989/sql_note/blob/main/P131-BigQuery%E3%81%AEbq%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
 - [Page132-BigQueryのmaterialized viewについて](https://github.com/SugiAki1989/sql_note/blob/main/P132-BigQuery%E3%81%AEmaterialized%20view%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
-- [Page133-GoogleTagManagerについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P133-GoogleTagManager%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
+- [Page133-GoogleTagManagerからGA4にイベントを送信する(入門編).md](https://github.com/SugiAki1989/sql_note/blob/main/P133-GoogleTagManager%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)

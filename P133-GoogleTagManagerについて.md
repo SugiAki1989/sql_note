@@ -2,7 +2,7 @@
 
 ここでは Google Tag Manager でデータを生成する方法についてまとめておく。SQL関係ないのでは？と思った人もいるが、GA4のデータをBigQueryに連携したり、各種マーケティングツールでは、JavaScriptを書いて、ユーザーの行動をデータとして取得することも行われる。
 
-そのような時に、データを生成する部分から知っておいても損はないので、ここでは Google Tag Managerを利用して、Webサイトの基本的なユーザー行動をデータとして取得する方法について学んだ内容をまとめておく。内容が誤っている可能性もある、かつ、JavaScriptも久々に書いたので、こちらも効率の良い書き方になってないかもしれない。
+そのような時に、データを生成する部分から知っておいても損はないので、ここでは Google Tag Managerを利用して、Webサイトの基本的なユーザー行動をデータとして取得する方法について学んだ基礎の「き」くらいの内容をまとめておく。内容が誤っている可能性もある、かつ、JavaScriptも久々に書いたので、こちらも効率の良い書き方になってないかもしれない。
 
 ## :floppy_disk: Database
 
@@ -48,11 +48,64 @@ console.log('price: ' + price)
 </script>
 ```
 
-## :pencil2: GA4のイベントをデバッグする
+## :pencil2: GA4のイベントを送信する
 
-基本的なGoogle Tag Managerの使い方はわかったので、GA4にイベントを送る方法を確認しておく。`gtag`という関数を利用することで、GA4にイベントを送ることが出来るようになるので、あとはこの関数に送りたいイベントの値を取得して、引数に渡せば良い。
+基本的なGoogle Tag Managerの使い方はわかったので、GA4にイベントを送る方法を確認しておく。`gtag`という関数を利用することで、GA4にイベントを送ることが出来るようになるので、あとはこの関数に送りたいイベントの値を取得して、引数に渡せば良い。イベントを設定することで、ウェブサイトやアプリで発生したユーザーのアクションを記録して、GA4のデータに反映できるようになる。最初から用意されているイベントだけでも十分かもしれないが、カバーしきれないイベントを記録したいとなるとJavaScriptが必要になる。
 
-ここでは、TOPページにある東京の画像をホバーしたら、ホバーした分だけイベントをGA4に連携するスクリプトを書く。Webページの特定の要素に対する特定のイベントが発生したタイミングでイベントを飛ばす処理が実務で必要かはさておき、とりあえず練習がてらやってみる。
+先に言葉の説明をまとめておく。データレイヤーという言葉がドキュメントによく出てくるが、これは、Google Tag Managerと gtag.js でタグに情報を渡すために使用するオブジェクトの名称のこと。データレイヤーを介してイベントや変数を渡したり、変数の値に基づいたトリガーを設定できる。下記は[ドキュメント](https://developers.google.com/tag-platform/tag-manager/datalayer?hl=ja)のデータレイヤーの例。
+
+```
+{
+  event: "checkout_button",
+  gtm: {
+    uniqueEventId: 2,
+    start: 1639524976560,
+    scrollThreshold: 90,
+    scrollUnits: "percent",
+    scrollDirection: "vertical",
+    triggers: "1_27"
+  },
+  value: "120"
+}
+```
+
+昔からの経緯などはわからないが、`dataLayer.push()`で値を保存して送信しなくても、`gtag()`でよいらしい。このあたりの使いわけとか、この要件だと、これでないとできないなどは勿論わからない。とりあえず、ここでは、TOPページにある東京の画像をホバーしたら、ホバーした分だけイベントをGA4に連携するスクリプトを書く。Webページの特定の要素に対する特定のイベントが発生したタイミングでイベントを飛ばす処理が実務で必要かはさておき、とりあえず練習がてらやってみる。 ちなみにgtag.js ベースのコードをカスタム HTML タグで利用するのは非推奨。用意されている Google 広告、アナリティクスなどのネイティブタグ テンプレートを使用するのが望ましいとのこと。
+
+下記は[ドキュメント](https://developers.google.com/analytics/devguides/collection/ga4/set-up-ecommerce?hl=ja)に載っている例。`gtag()`にイベント名と共通の情報、個別に分けたい情報などを引数に渡すことでイベントを送信できる。直書きできることは基本ないはずなので、DOMを操作して値を持ってくる必要があるのと、コメントアウトにも記載されているが、一度に商品を複数、入れる可能性もあるので、その場合は配列を使うらしい。
+
+```
+gtag("event", "purchase", {
+    transaction_id: "T_12345_1",
+    value: 25.42,
+    tax: 4.90,
+    shipping: 5.99,
+    currency: "USD",
+    coupon: "SUMMER_SALE",
+    items: [
+    // If someone purchases more than one item, 
+    // you can add those items to the items array
+     {
+      item_id: "SKU_12345",
+      item_name: "Stan and Friends Tee",
+      affiliation: "Google Merchandise Store",
+      coupon: "SUMMER_FUN",
+      discount: 2.22,
+      index: 0,
+      item_brand: "Google",
+      item_category: "Apparel",
+      item_category2: "Adult",
+      item_category3: "Shirts",
+      item_category4: "Crew",
+      item_category5: "Short sleeve",
+      item_list_id: "related_products",
+      item_list_name: "Related Products",
+      item_variant: "green",
+      location_id: "ChIJIQBpAG2ahYAR_6128GcTUEo",
+      price: 9.99,
+      quantity: 1
+    }]
+});
+```
 
 - タグの設定: カスタムHTML
 - トリガー: Page View 
@@ -77,7 +130,6 @@ GTMでイベントを収集するスクリプトを記述した際に、動作�
 ![GA4 Debug View1](https://github.com/SugiAki1989/sql_note/blob/main/image/p133-hover_photo1.png)
 ![GA4 Debug View2](https://github.com/SugiAki1989/sql_note/blob/main/image/p133-hover_photo3.png)
 
-
 特定の要素ではなく、特定の共通的な要素を持つ要素に対して、イベントリスナーを設定してみる。ここでは、東京、富士山、京都の画像の1枚づつ表示されているので、それをクリックしたら、写真の名前を使ってイベントネームを加工して、写真名とともにイベントを送信してみる。ちょっとJavaScriptがいまいちな感じなのはさておき、これでイベントを送信できる。
 
 ```
@@ -98,5 +150,6 @@ photoContainers.forEach(photoContainer => {
 
 ## :closed_book: Reference
 
+- [Google アナリティクス 4 イベント](https://developers.google.com/gtagjs/reference/ga4-events?hl=ja#level_start)
 - [イベントを設定する](https://developers.google.com/analytics/devguides/collection/ga4/events?hl=ja&client_type=gtm)
 - [e コマースを測定する](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?client_type=gtag&sjid=18231440941452277038-AP&hl=ja#add_or_remove_an_item_from_a_shopping_cart)

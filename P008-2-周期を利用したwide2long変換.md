@@ -149,6 +149,109 @@ order by hour asc;
 (24 rows)
 ```
 
+他にも`cross join`を使用する方法もある。横長のカラム数に合わせて連番テーブルを作成し、`cross join`でくっつける。こうすることで、連番テーブルの行数分、紐づけ先の1行を拡張できる。
+
+```sql
+with c as (
+  select 1 as time
+  union all select 2 as time
+  union all select 3 as time
+  union all select 4 as time
+) 
+select * from yokonaga cross join c;
+
+ s | t1 | t2 | t3 | t4 | time 
+---+----+----+----+----+------
+ 1 |  3 |  1 |  2 |  0 |    1
+ 1 |  3 |  1 |  2 |  0 |    2
+ 1 |  3 |  1 |  2 |  0 |    3
+ 1 |  3 |  1 |  2 |  0 |    4
+---------------------------------
+ 2 |  1 |  5 |  1 |  7 |    1
+ 2 |  1 |  5 |  1 |  7 |    2
+ 2 |  1 |  5 |  1 |  7 |    3
+ 2 |  1 |  5 |  1 |  7 |    4
+---------------------------------
+ 3 |  4 |  4 |  6 |  5 |    1
+ 3 |  4 |  4 |  6 |  5 |    2
+ 3 |  4 |  4 |  6 |  5 |    3
+ 3 |  4 |  4 |  6 |  5 |    4
+---------------------------------
+ 4 |  5 |  3 |  3 |  4 |    1
+ 4 |  5 |  3 |  3 |  4 |    2
+ 4 |  5 |  3 |  3 |  4 |    3
+ 4 |  5 |  3 |  3 |  4 |    4
+---------------------------------
+ 5 |  7 |  1 |  7 |  2 |    1
+ 5 |  7 |  1 |  7 |  2 |    2
+ 5 |  7 |  1 |  7 |  2 |    3
+ 5 |  7 |  1 |  7 |  2 |    4
+---------------------------------
+ 6 |  3 |  2 |  2 |  4 |    1
+ 6 |  3 |  2 |  2 |  4 |    2
+ 6 |  3 |  2 |  2 |  4 |    3
+ 6 |  3 |  2 |  2 |  4 |    4
+(24 rows)
+```
+
+あとはこのテーブルを使って、ラベルや値を取得する。
+
+```sql
+with c as (
+  -- select generate_series(1, 4) as time だと1行でかける
+  select 1 as time
+  union all select 2 as time
+  union all select 3 as time
+  union all select 4 as time
+) 
+select 
+  case 
+    when c.time = 1 then 't1'
+    when c.time = 2 then 't2' 
+    when c.time = 3 then 't3' 
+    when c.time = 4 then 't4'
+  end as quarter,
+  case 
+    when c.time = 1 then y.t1
+    when c.time = 2 then y.t2 
+    when c.time = 3 then y.t3 
+    when c.time = 4 then y.t4
+  end as value
+from
+  yokonaga as y
+cross join
+  c
+;
+
+ quarter | value 
+---------+-------
+ t1      |     3
+ t2      |     1
+ t3      |     2
+ t4      |     0
+ t1      |     1
+ t2      |     5
+ t3      |     1
+ t4      |     7
+ t1      |     4
+ t2      |     4
+ t3      |     6
+ t4      |     5
+ t1      |     5
+ t2      |     3
+ t3      |     3
+ t4      |     4
+ t1      |     7
+ t2      |     1
+ t3      |     7
+ t4      |     2
+ t1      |     3
+ t2      |     2
+ t3      |     2
+ t4      |     4
+(24 rows)
+```
+
 ## :closed_book: Reference
 
 None

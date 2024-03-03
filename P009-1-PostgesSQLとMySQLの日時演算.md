@@ -100,6 +100,28 @@ timestampdiff_second | 1.000000
 
 ```
 
+日付型であれば、もっと簡単に記述できる。`+,-`を使って計算する。
+
+```sql
+select 
+	current_date - 30 as minus30day,
+	current_date - 10 as minus10day,
+	current_date - 1 as minus1day,
+	current_date + 1 as plus1day,
+	current_date + 10 as plus10day,
+	current_date + 30 as plus30day
+	;
+
+-[ RECORD 1 ]----------
+minus30day | 2024-02-01
+minus10day | 2024-02-21
+minus1day  | 2024-03-01
+plus1day   | 2024-03-03
+plus10day  | 2024-03-12
+plus30day  | 2024-04-01
+
+```
+
 2 つの日付の月数や年数の差を求めたい場合は、`extract(year)`,`extract(ymonth)`を利用して計算する方法もあるが、後で紹介する`age`関数の方法のほうが厳密な計算ができるので、あくまで参考としてまとめておく。
 
 ```sql

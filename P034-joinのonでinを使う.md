@@ -198,6 +198,135 @@ on
 (20 rows)
 ```
 
+## おまけ
+
+`join`の条件を設定を調整したいときはわりと頻繁に存在する。例えば、下記の部門マスタに対して、マスタの値は全て残しつつ、30、40以外の情報を紐づけたいとする。`dept`マスタに`emp`を紐づけると、40は紐づかないが、30も紐づいてしまう。
+
+```sql
+select deptno from dept;
+ deptno
+--------
+     10
+     20
+     30
+     40
+(4 rows)
+
+select distinct deptno from emp;
+ deptno
+--------
+     10
+     20
+     30
+(3 rows)
+```
+
+そのため、`left join`しても意図通りに紐づけることができない。
+
+```sql
+select
+  e.ename,
+  d.deptno,
+  d.dname,
+  d.loc
+from
+  dept as d
+left join
+  emp as e
+on
+  d.deptno = e.deptno
+order by
+  deptno asc
+;
+
+ ename  | deptno |   dname    |   loc
+--------+--------+------------+----------
+ MILLER |     10 | ACCOUNTING | NEW YORK
+ CLARK  |     10 | ACCOUNTING | NEW YORK
+ KING   |     10 | ACCOUNTING | NEW YORK
+ SMITH  |     20 | RESEARCH   | DALLAS
+ JONES  |     20 | RESEARCH   | DALLAS
+ SCOTT  |     20 | RESEARCH   | DALLAS
+ ADAMS  |     20 | RESEARCH   | DALLAS
+ FORD   |     20 | RESEARCH   | DALLAS
+ WARD   |     30 | SALES      | CHICAGO -- 30,40は不要
+ TURNER |     30 | SALES      | CHICAGO -- 30,40は不要
+ ALLEN  |     30 | SALES      | CHICAGO -- 30,40は不要
+ JAMES  |     30 | SALES      | CHICAGO -- 30,40は不要
+ BLAKE  |     30 | SALES      | CHICAGO -- 30,40は不要
+ MARTIN |     30 | SALES      | CHICAGO -- 30,40は不要
+        |     40 | OPERATIONS | BOSTON  -- 30,40は不要
+(15 rows)
+```
+
+このようなケースでは、`on`に条件を追加すれば良い。
+
+```sql
+select
+  e.ename,
+  d.deptno,
+  d.dname,
+  d.loc
+from
+  dept as d
+left join
+  emp as e
+on
+  d.deptno = e.deptno
+  and (e.deptno = 10 or e.deptno = 20)
+order by
+  deptno asc
+;
+
+ ename  | deptno |   dname    |   loc
+--------+--------+------------+----------
+ MILLER |     10 | ACCOUNTING | NEW YORK
+ CLARK  |     10 | ACCOUNTING | NEW YORK
+ KING   |     10 | ACCOUNTING | NEW YORK
+ SCOTT  |     20 | RESEARCH   | DALLAS
+ SMITH  |     20 | RESEARCH   | DALLAS
+ ADAMS  |     20 | RESEARCH   | DALLAS
+ JONES  |     20 | RESEARCH   | DALLAS
+ FORD   |     20 | RESEARCH   | DALLAS
+        |     30 | SALES      | CHICAGO
+        |     40 | OPERATIONS | BOSTON
+(10 rows)
+```
+
+これは、下記とも同じである。つまり、テーブルを限定してしまうか、紐づけの際に限定するかの違いである。
+
+```sql
+select
+  e.ename,
+  d.deptno,
+  d.dname,
+  d.loc
+from
+  dept as d
+left join
+  (select * from emp where deptno = 10 or deptno = 20) as e
+on
+  d.deptno = e.deptno
+order by
+  deptno asc
+;
+
+ ename  | deptno |   dname    |   loc
+--------+--------+------------+----------
+ MILLER |     10 | ACCOUNTING | NEW YORK
+ CLARK  |     10 | ACCOUNTING | NEW YORK
+ KING   |     10 | ACCOUNTING | NEW YORK
+ SCOTT  |     20 | RESEARCH   | DALLAS
+ SMITH  |     20 | RESEARCH   | DALLAS
+ ADAMS  |     20 | RESEARCH   | DALLAS
+ JONES  |     20 | RESEARCH   | DALLAS
+ FORD   |     20 | RESEARCH   | DALLAS
+        |     30 | SALES      | CHICAGO
+        |     40 | OPERATIONS | BOSTON
+(10 rows)
+```
+
+
 ## :closed_book: Reference
 
 None

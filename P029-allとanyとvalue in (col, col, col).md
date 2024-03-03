@@ -167,6 +167,25 @@ where
 (1 row)
 ```
 
+`in`はスカラやベクトルだけではなく、テーブルを使って条件付けることもできる。あまり使う頻度は高くないと思うが、忘れた時のメモとして記録しておく。`where`で選択したカラムと`select`で選択したカラムが一致している必要がある。
+
+```sql
+select
+    ename, deptno
+from
+    emp
+where
+    (ename, deptno) in 
+    (select ename, deptno from emp where ename = 'MILLER' or ename = 'SCOTT')
+;
+
+ ename  | deptno
+--------+--------
+ SCOTT  |     20
+ MILLER |     10
+(2 rows)
+```
+
 ## :closed_book: Reference
 
 None

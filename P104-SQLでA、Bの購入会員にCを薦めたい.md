@@ -72,6 +72,22 @@ where cuid not in(select cuid from recommend where item = 'C');
 (1 row)
 ```
 
+上のSQLをまとめたものがこちら。こっちのほうがスマートかも。
+
+```sql
+select distinct cuid
+from recommend
+where 
+      cuid in (select cuid from recommend where item = 'A')
+  and cuid in (select cuid from recommend where item = 'B')
+  and cuid not in (select cuid from recommend where item in ('C'));
+
+ cuid
+-------
+ cuid3
+(1 row)
+```
+
 `join`で愚直に行く方法でもわかりやすくていいかもしれない。下記はすごく冗長だけど。
 
 ```sql
@@ -124,6 +140,38 @@ where c.cuid_c is null
 -------
  cuid3
 ```
+
+`case`で対処する方法だとこうなる。A,Bを購入している場合、次の`case`に進む。購入していないと、0が確定する。購入していてほしい商品の判別が終わったら、購入してない商品かどうかの判別を行う。`case`のイメージは下記の通り。
+
+```
+cuid1 F   F   T>0
+cuid2 F   T>0
+cuid3 F   F   F>1
+cuid4 T>0 
+```
+
+`where`に`case`を使用する。
+
+```sql
+-- A,Bを購入していて、かつCを購入していない顧客
+select distinct cuid
+from recommend
+where 1 = (
+  -- 購入している場合、次のcaseに進む。購入していないと、0が確定する。
+    case 
+    when cuid not in (select cuid from recommend where item = 'A') then 0
+    when cuid not in (select cuid from recommend where item = 'B') then 0
+    when cuid in (select cuid from recommend where item = 'C') then 0
+    else 1 end
+);
+
+ cuid
+-------
+ cuid3
+(1 row)
+```
+
+## :pencil2: おまけ
 
 今回のケースであれば`all`でも`not in`でも可能と書いたが、下記のように`null`が入るとだめになる。前にも解説した通り、3 値論理の真理表を見ればわかる。`null`なんか入らないでしょうと？と思うかもしれないが、エンジニアががっちがっちに管理しているのであれば別だが、そうではない DB やデータの連携をたくさんしてると伝言ゲームのようになって`null`がこんにちわしていることはよくある。
 

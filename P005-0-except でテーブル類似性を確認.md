@@ -55,6 +55,208 @@ select id from x;
 (0 rows)
 ```
 
+もう少し複雑なテーブルでを使って挙動を確認する。
+
+```sql
+create table xx (
+  id int not null
+  , name varchar(50)
+  , dt int
+);
+
+INSERT INTO xx VALUES (1, 'A', '2024');
+INSERT INTO xx VALUES (1, 'A', '2025');
+INSERT INTO xx VALUES (2, 'B', '2024');
+INSERT INTO xx VALUES (2, 'B', '2025');
+INSERT INTO xx VALUES (2, 'B', '2026');
+INSERT INTO xx VALUES (3, 'C', '2024');
+INSERT INTO xx VALUES (4, 'D', '2025');
+INSERT INTO xx VALUES (5, 'E', '2026');
+INSERT INTO xx VALUES (5, 'E', '2026');
+
+create table yy (
+  id int not null
+  , name varchar(50)
+  , dt int
+);
+
+INSERT INTO yy VALUES (1, 'A', '2024');
+INSERT INTO yy VALUES (1, 'A', '2025');
+INSERT INTO yy VALUES (2, 'B', '2024');
+INSERT INTO yy VALUES (2, 'B', '2026');
+INSERT INTO yy VALUES (3, 'C', '2024');
+
+select * from xx;
+ id | name |  dt
+----+------+------
+  1 | A    | 2024
+  1 | A    | 2025
+  2 | B    | 2024
+  2 | B    | 2025
+  2 | B    | 2026
+  3 | C    | 2024
+  4 | D    | 2025
+  5 | E    | 2026
+  5 | E    | 2026
+(9 rows)
+
+select * from yy;
+ id | name |  dt
+----+------+------
+  1 | A    | 2024
+  1 | A    | 2025
+  2 | B    | 2024
+  2 | B    | 2026
+  3 | C    | 2024
+(5 rows)
+```
+
+選択するカラムを2個にすると、2カラムを考慮して、重複するレコードを返す。
+
+```sql
+select id, name from xx
+intersect
+select id, name from yy
+;
+
+ id | name
+----+------
+  1 | A
+  2 | B
+  3 | C
+(3 rows)
+
+select id, name, dt from xx
+intersect all
+select id, name, dt from yy
+;
+ id | name |  dt
+----+------+------
+  1 | A    | 2025
+  1 | A    | 2024
+  2 | B    | 2024
+  2 | B    | 2026
+  3 | C    | 2024
+(5 rows)
+```
+
+`intersect`と`intersect all`の挙動は下記を見ると分かりやすい。`intersect`の場合は2カラムで重複している`[1,2],[3,5],[6]`行目が対象となり、重複しているレコードは除外されて3行が返される。`intersect all`だと、`[1,2],[3,5],[6]`行目が対象となり、そのまま返される。
+
+```
+id | name |  dt
+----+------+------ -> yy table
+  1 | A    | 2024  -> | 1 | A | 2024 | 
+  1 | A    | 2025  -> | 1 | A | 2025 | 
+  2 | B    | 2024  -> | 2 | B | 2024 | 
+  2 | B    | 2025  
+  2 | B    | 2026  -> | 2 | B | 2026 | 
+  3 | C    | 2024  -> | 3 | C | 2024 | 
+  4 | D    | 2025
+  5 | E    | 2026
+  5 | E    | 2026
+```
+
+今回のデータでは、3カラムにしても重複を除けないので、`intersect`と`intersect all`の結果は同じである。
+
+```sql
+select id, name, dt from xx
+intersect
+select id, name, dt from yy
+;
+
+ id | name |  dt
+----+------+------
+  1 | A    | 2024
+  1 | A    | 2025
+  2 | B    | 2024
+  2 | B    | 2026
+  3 | C    | 2024
+(5 rows)
+
+select id, name, dt from xx
+intersect all
+select id, name, dt from yy
+;
+ id | name |  dt
+----+------+------
+  1 | A    | 2024
+  1 | A    | 2025
+  2 | B    | 2024
+  2 | B    | 2026
+  3 | C    | 2024
+(5 rows)
+```
+
+`except`で選択するカラムを2個にすると、2カラムを考慮して、1つめのテーブルにだけ存在するデータを取得する。`except all`の結果には注意が必要。`id=2 | name=B`が1行返されている。これは、`except`が重複を削除する一方で、`except all`は重複を削除しない。1つ目のテーブルに`id=2 | name=B`が3行、2つ目のテーブルに`id=2 | name=B`が2行しかないので、1行返される。
+
+```sql
+select id, name from xx
+except
+select id, name from yy
+;
+
+ id | name
+----+------
+  4 | D
+  5 | E
+(2 rows)
+
+select id, name from xx
+except all
+select id, name from yy
+;
+  id | name
+----+------
+  2 | B
+  4 | D
+  5 | E
+  5 | E
+(4 rows)
+```
+
+下記を見ると分かりやすい。
+
+```
+id | name |  dt
+----+------+------ -> yy table
+  1 | A    | 2024  -> | 1 | A | 2024 | 
+  1 | A    | 2025  -> | 1 | A | 2025 | 
+  2 | B    | 2024  -> | 2 | B | 2024 | 
+  2 | B    | 2025  
+  2 | B    | 2026  -> | 2 | B | 2026 | 
+  3 | C    | 2024  -> | 3 | C | 2024 | 
+  4 | D    | 2025
+  5 | E    | 2026
+  5 | E    | 2026
+```
+
+参考までに3カラム考慮した場合の結果を載せておく。
+
+```sql
+select id, name, dt from xx
+except
+select id, name, dt from yy
+;
+ id | name |  dt
+----+------+------
+  2 | B    | 2025
+  4 | D    | 2025
+  5 | E    | 2026
+(3 rows)
+
+select id, name, dt from xx
+except all
+select id, name, dt from yy
+;
+ id | name |  dt
+----+------+------
+  2 | B    | 2025
+  4 | D    | 2025
+  5 | E    | 2026
+  5 | E    | 2026
+(4 rows)
+```
+
 `except`と`group by`を組み合わせることで、重複している行、片方にしか存在していないデータを確認することができる。
 
 ```sql

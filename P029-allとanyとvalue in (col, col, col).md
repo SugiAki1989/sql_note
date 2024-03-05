@@ -102,7 +102,7 @@ where
 (1 row)
 ```
 
-どの方法もすごく力づくでメンテナンス性がない。これを`all`や`any`が解決してくれる(あまり変わってない気もしなくもない)。`all`や`any`は、PostgeSQL では`any(array[]), all(array[])`と書く必要がある。まずは`any`から。
+どの方法もすごく力づくでメンテナンス性がない。これを`all`や`any`が解決してくれる(あまり変わってない気もしなくもない)。`all`や`any`は、PostgeSQL では`any(array[]), all(array[])`と書く必要がある。まずは`any`から。`any`は`c1 = 1 or c2 = 1 or ... or c5 = 1`のショートカットである。
 
 ```sql
 select
@@ -165,6 +165,37 @@ where
 ----+----+----+----+----+----
   5 |    |    |    |    |
 (1 row)
+```
+
+`all`や`any`の使い方をもう少し見ておく。`sal`は、`ALLEN:1600`、`SCOTT:3000`である。`any`だといずれかを満たせばよいので、この場合`1600`より大きいレコードが検索される。
+
+```sql
+select * from emp
+where sal > any(select sal from emp where ename = 'ALLEN' or ename = 'SCOTT');
+
+ empno | ename |    job    | mgr  |  hiredate  | sal  | comm | deptno
+-------+-------+-----------+------+------------+------+------+--------
+  7566 | JONES | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20
+  7698 | BLAKE | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30
+  7782 | CLARK | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10
+  7788 | SCOTT | ANALYST   | 7566 | 1982-12-09 | 3000 | NULL |     20
+  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10
+  7902 | FORD  | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20
+(6 rows)
+```
+
+`all`だとすべてを満たす必要があるので、この場合`3000`以上でなければならない。
+
+```sql
+select * from emp
+where sal >= all(select sal from emp where ename = 'ALLEN' or ename = 'SCOTT');
+
+ empno | ename |    job    | mgr  |  hiredate  | sal  | comm | deptno
+-------+-------+-----------+------+------------+------+------+--------
+  7788 | SCOTT | ANALYST   | 7566 | 1982-12-09 | 3000 | NULL |     20
+  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10
+  7902 | FORD  | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20
+(3 rows)
 ```
 
 `in`はスカラやベクトルだけではなく、テーブルを使って条件付けることもできる。あまり使う頻度は高くないと思うが、忘れた時のメモとして記録しておく。`where`で選択したカラムと`select`で選択したカラムが一致している必要がある。

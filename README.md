@@ -176,3 +176,5 @@
 - [Page134-DBeaverの設定メモ.md](https://github.com/SugiAki1989/sql_note/blob/main/P134-DBeaver%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%83%A1%E3%83%A2.md)
 - [Page135-クエリチューニングに関するまとめ.md](https://github.com/SugiAki1989/sql_note/blob/main/P135-%E3%82%AF%E3%82%A8%E3%83%AA%E3%83%81%E3%83%A5%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A8%E3%82%81.md)
 - [Page136-having句内の相関サブクエリについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P136-having%E5%8F%A5%E5%86%85%E3%81%AE%E7%9B%B8%E9%96%A2%E3%82%B5%E3%83%96%E3%82%AF%E3%82%A8%E3%83%AA.md)
+- [Page137-文字列処理のあれこれ.md]()
+- [Page138-webサイトのCVに関連するセッションを識別する.md]()

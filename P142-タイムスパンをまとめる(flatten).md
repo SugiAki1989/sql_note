@@ -23,8 +23,8 @@ PostgreSQL
 
 今回はタイムスパンを平坦化するSQL。言葉での説明が難しいので、イメージものせておく。各タイムスパンが重複している場合、それは同じタイムスパンと考え、それが途切れた時点から、異なるタイムスパンとして扱うというもの。2枚目の最後の方に、ブロックが重なっていない箇所があるが、それがタイムスパンの切れ目である。
 
-![start](/Users/aki/Documents/sql_note/image/p141-start.png)
-![end](/Users/aki/Documents/sql_note/image/p141-end.png)
+![start](https://github.com/SugiAki1989/sql_note/blob/main/image/p141-start.png)
+![end](/https://github.com/SugiAki1989/sql_note/blob/main/image/p141-end.png)
  
 参照元ブログにも記載されている通り、まずは、サンプルデータを生成する。クエリは下記の通り。
 

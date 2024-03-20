@@ -179,5 +179,6 @@
 - [Page137-文字列処理のあれこれ.md](https://github.com/SugiAki1989/sql_note/blob/main/P137-%E6%96%87%E5%AD%97%E5%88%97%E5%87%A6%E7%90%86%E3%81%AE%E3%81%82%E3%82%8C%E3%81%93%E3%82%8C.md)
 - [Page138-webサイトのCVに関連するセッションを識別する.md](https://github.com/SugiAki1989/sql_note/blob/main/P138-web%E3%82%B5%E3%82%A4%E3%83%88%E3%81%AECV%E3%81%AB%E9%96%A2%E9%80%A3%E3%81%99%E3%82%8B%E3%82%BB%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E8%AD%98%E5%88%A5%E3%81%99%E3%82%8B.md)
 - [Page139-特定のパターンを持つランダムデータを生成する](https://github.com/SugiAki1989/sql_note/blob/main/P140-%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%94%E3%81%A8%E3%81%AB%E5%85%88%E9%A0%AD%E8%A1%8C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B.md)
-- [Page140-グループごとに先頭行を表示する](https://github.com/SugiAki1989/sql_note/blob/main/P141-PostgreSQL%E3%81%AE%E8%A1%8C%E3%82%B3%E3%83%B3%E3%82%B9%E3%83%88%E3%83%A9%E3%82%AF%E3%82%BF.md)
-- [Page141-PostgreSQLの行コンストラクタ](https://github.com/SugiAki1989/sql_note/blob/main/P142-%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%B9%E3%83%91%E3%83%B3%E3%82%92%E3%81%BE%E3%81%A8%E3%82%81%E3%82%8B(flatten).md)
+- [Page140-グループごとに先頭行を表示する.md](https://github.com/SugiAki1989/sql_note/blob/main/P140-%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%94%E3%81%A8%E3%81%AB%E5%85%88%E9%A0%AD%E8%A1%8C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B.md)
+- [Page141-PostgreSQLの行コンストラクタ.md](https://github.com/SugiAki1989/sql_note/blob/main/P141-PostgreSQL%E3%81%AE%E8%A1%8C%E3%82%B3%E3%83%B3%E3%82%B9%E3%83%88%E3%83%A9%E3%82%AF%E3%82%BF.md)
+- [Page142-タイムスパンをまとめる(flatten).md)](https://github.com/SugiAki1989/sql_note/blob/main/P142-%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%B9%E3%83%91%E3%83%B3%E3%82%92%E3%81%BE%E3%81%A8%E3%82%81%E3%82%8B(flatten).md)

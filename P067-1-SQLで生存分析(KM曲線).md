@@ -214,7 +214,7 @@ df_fit
 write_csv(df_fit, '~/Desktop/survival_pack_survfit.csv')
 ```
 
-![ 比較](https://user-images.githubusercontent.com/65038325/186905486-06c0beb1-db9f-4702-9ab1-b9417c1be442.png)
+![比較](https://user-images.githubusercontent.com/65038325/186905486-06c0beb1-db9f-4702-9ab1-b9417c1be442.png)
 
 下記はおまけ。
 

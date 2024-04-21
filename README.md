@@ -187,3 +187,4 @@
 - [Page143-SQLでベイズ更新をする.md](https://github.com/SugiAki1989/sql_note/blob/main/P143-SQL%E3%81%A7%E3%83%99%E3%82%A4%E3%82%BA%E6%9B%B4%E6%96%B0%E3%82%92%E3%81%99%E3%82%8B.md)
 - [Page144-AzureDatabricksSQLで遊んでみた1(関数編).md](https://github.com/SugiAki1989/sql_note/blob/main/P144-AzureDatabricksSQL%E3%81%A7%E9%81%8A%E3%82%93%E3%81%A7%E3%81%BF%E3%81%9F1(%E9%96%A2%E6%95%B0%E7%B7%A8).md)
 - [Page145-AzureDatabricksSQLで遊んでみた2(Array編).md](https://github.com/SugiAki1989/sql_note/blob/main/P145-AzureDatabricksSQL%E3%81%A7%E9%81%8A%E3%82%93%E3%81%A7%E3%81%BF%E3%81%9F2(Array%E7%B7%A8).md)
+- [Page146-Athenaで1stクエリを発行するまでの設定方法]()

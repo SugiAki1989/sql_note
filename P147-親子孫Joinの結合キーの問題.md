@@ -99,7 +99,7 @@ left join jt3 on jt1.key = jt3.key
 
 問題は、`親 - 子 - 孫`のパターン。つまり、「親をベースに子と孫」を紐づけるが、「親と孫」の紐づけは「子と孫」の関係を利用して紐づける。下記のようなイメージである。
 
-[join-key](https://github.com/SugiAki1989/sql_note/blob/main/image/p147-1.png)
+![join-key](https://github.com/SugiAki1989/sql_note/blob/main/image/p147-1.png)
 
 
 この後に類似ケースを記載するが、肝となるのは`left join jt3　on jt2.key = jt3.key`であり、`jt1`に`jt3`に情報を紐づけるには、`jt2`が処理される必要があるため、実行計画の最下部には`jt2`を含めた処理が行われる。

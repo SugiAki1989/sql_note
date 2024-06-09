@@ -189,3 +189,4 @@
 - [Page145-AzureDatabricksSQLで遊んでみた2(Array編).md](https://github.com/SugiAki1989/sql_note/blob/main/P145-AzureDatabricksSQL%E3%81%A7%E9%81%8A%E3%82%93%E3%81%A7%E3%81%BF%E3%81%9F2(Array%E7%B7%A8).md)
 - [Page146-Athenaで1stクエリを発行するまでの設定方法.md](https://github.com/SugiAki1989/sql_note/blob/main/P146-Athena%E3%81%A71st%E3%82%AF%E3%82%A8%E3%83%AA%E3%82%92%E7%99%BA%E8%A1%8C%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A%E6%96%B9%E6%B3%95.md)
 - [Page147-親子孫Joinの結合キーの問題.md](https://github.com/SugiAki1989/sql_note/blob/main/P147-%E8%A6%AA%E5%AD%90%E5%AD%ABJoin%E3%81%AE%E7%B5%90%E5%90%88%E3%82%AD%E3%83%BC%E3%81%AE%E5%95%8F%E9%A1%8C.md)
+- []()

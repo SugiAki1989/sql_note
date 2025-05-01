@@ -14,7 +14,7 @@
 
 **記載している SQL が誤っている可能性があります。参考にされる際は、使用するテーブルと集計定義に合わせて、ご利用者様自身の裁量とリスクのもとに SQL を修正してください。一部ページは非公開です。内容が書籍や他者様のサイトの内容をもと、自分用のメモを記載しているものが非公開(private)です。**
 
-統計学や機械学習の学習ノートは[こっち](https://github.com/SugiAki1989/statistical_note)。
+統計学や機械学習の学習ノートは[こっち](https://github.com/SugiAki1989/statistical_note?tab=readme-ov-file#%E7%9B%AE%E6%AC%A1)。
 
 - [Page000-連続した日付を生成する.md](https://github.com/SugiAki1989/sql_note/blob/main/P000-%E9%80%A3%E7%B6%9A%E3%81%97%E3%81%9F%E6%97%A5%E4%BB%98%E3%82%92%E6%A8%A1%E6%93%AC%E3%83%AB%E3%83%BC%E3%83%97%E3%81%A7%E7%94%9F%E6%88%90%E3%81%99%E3%82%8B.md)
 - [Page001-SQL の評価順序.md](https://github.com/SugiAki1989/sql_note/blob/main/P001-SQL%E3%81%AE%E8%A9%95%E4%BE%A1%E9%A0%86%E5%BA%8F.md)

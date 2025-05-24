@@ -194,4 +194,4 @@
 - [Page148-デジタル庁の調達仕様書(7_データ分析機能)を読む](https://github.com/SugiAki1989/sql_note/blob/main/P148-%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E5%BA%81%E3%81%AE%E8%AA%BF%E9%81%94%E4%BB%95%E6%A7%98%E6%9B%B8(7_%E3%83%87%E3%83%BC%E3%82%BF%E5%88%86%E6%9E%90%E6%A9%9F%E8%83%BD)%E3%82%92%E8%AA%AD%E3%82%80.md)
 - [Page149-さくらのクラウドを触ってみた.md](https://github.com/SugiAki1989/sql_note/blob/main/P149-%E3%81%95%E3%81%8F%E3%82%89%E3%81%AE%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89%E3%82%92%E8%A7%A6%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F.md)
 - [Page150-論理演算子の優先順位.md](https://github.com/SugiAki1989/sql_note/blob/main/P150-%E8%AB%96%E7%90%86%E6%BC%94%E7%AE%97%E5%AD%90%E3%81%AE%E5%84%AA%E5%85%88%E9%A0%86%E4%BD%8D.md)
-- [Page151-RevOps&RevTechについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P151-RevOps%26RevTech%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
+- [Page151-RevOps&RevTechについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P151-RevOps%26RevTech%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)

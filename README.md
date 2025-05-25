@@ -195,3 +195,4 @@
 - [Page149-さくらのクラウドを触ってみた.md](https://github.com/SugiAki1989/sql_note/blob/main/P149-%E3%81%95%E3%81%8F%E3%82%89%E3%81%AE%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89%E3%82%92%E8%A7%A6%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F.md)
 - [Page150-論理演算子の優先順位.md](https://github.com/SugiAki1989/sql_note/blob/main/P150-%E8%AB%96%E7%90%86%E6%BC%94%E7%AE%97%E5%AD%90%E3%81%AE%E5%84%AA%E5%85%88%E9%A0%86%E4%BD%8D.md)
 - [Page151-RevOps&RevTechについて.md](https://github.com/SugiAki1989/sql_note/blob/main/P151-RevOps%26RevTech%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.md)
+- [Page152-SQLでニュートン法を実装する.md](https://github.com/SugiAki1989/sql_note/blob/main/P152-SQL%E3%81%A7%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%88%E3%83%B3%E6%B3%95%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B.md)
